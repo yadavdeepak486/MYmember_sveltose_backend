@@ -87,7 +87,9 @@ userSchema
     });
 
 userSchema.methods = {
-    authenticate: function(plainText) {
+        authenticate: function(plainText) {
+        console.log(plainText,this.hashed_password)
+        console.log(this.encryptPassword(plainText))
         return this.encryptPassword(plainText) === this.hashed_password;
     },
 

@@ -13,13 +13,13 @@ const categoryRoutes = require('./routes/category');
 const productRoutes = require('./routes/product');
 const braintreeRoutes = require('./routes/braintree');
 const orderRoutes = require('./routes/order');
-
+const add_member = require('./routes/addmember');
 // app
 const app = express();
 
 // db
 mongoose
-    .connect(process.env.DATABASE, {
+    .connect(" mongodb://127.0.0.1:27017/mymember", {
         useNewUrlParser: true,
         useCreateIndex: true
     })
@@ -39,6 +39,7 @@ app.use('/api', categoryRoutes);
 app.use('/api', productRoutes);
 app.use('/api', braintreeRoutes);
 app.use('/api', orderRoutes);
+app.use('/api',add_member);
 
 const port = process.env.PORT || 8000;
 
