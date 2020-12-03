@@ -13,8 +13,11 @@ const categoryRoutes = require('./routes/category');
 const productRoutes = require('./routes/product');
 const braintreeRoutes = require('./routes/braintree');
 const orderRoutes = require('./routes/order');
+const programRoutes = require("./routes/program")
+const manageRankRoutes = require("./routes/program_rank")
+const stripe = require("./routes/stripe");
 
-// app
+const adminstrate = require("./routes/administrater_user")
 const app = express();
 
 // db
@@ -39,7 +42,10 @@ app.use('/api', categoryRoutes);
 app.use('/api', productRoutes);
 app.use('/api', braintreeRoutes);
 app.use('/api', orderRoutes);
-
+app.use("/api",programRoutes)
+app.use("/api",manageRankRoutes);
+app.use("/api",stripe);
+app.use("/api",adminstrate)
 const port = process.env.PORT || 8000;
 
 app.listen(port, () => {
