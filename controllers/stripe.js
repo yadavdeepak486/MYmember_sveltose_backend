@@ -1,3 +1,4 @@
+const { env } = require("process");
 const stripe = require("../models/stripe");
 // var s = require("../uploads")
 
@@ -13,9 +14,9 @@ exports.create = (req, res) => {
         };
         const cloudenary = require("cloudinary").v2
         cloudenary.config({
-            cloud_name: "sveltose-com",
-            api_key: "914449541412924",
-            api_secret: "ZEHWWVyB7gf4Gj5FPuWPucmAtZU"
+            cloud_name: process.env.cloud_name,
+            api_key: process.env.cloud_api_key,
+            api_secret: process.env.cloud_api_secret
         });
         console.log(req.file)
         const path = req.file.path

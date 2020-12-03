@@ -14,12 +14,11 @@ var upload = multer({ storage: storage });
 const {
     signup,
     signin,
-    signout,
-    requireSignin
+    signout
 } = require("../controllers/administrat_user");
 const { userSignupValidator } = require("../validator");
 
-router.post("/add_administer", upload.single("profile_image"),signup);
+router.post("/add_administer", upload.single("profile_image"), signup);
 router.post("/administer_signin", signin);
 router.get("/administrat_signout", signout);
 
