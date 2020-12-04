@@ -19,6 +19,25 @@ exports.addmember = (req, res) => {
    
 }
 
+exports.read = (req, res) => {
+    addmemberModal.find().exec((err,data)=>{
+        if(err){
+            res.send({error:'member list is not found'})
+        }
+        else{
+            if(data.length > 0)
+            {
+               res.send(data)
+            }
+            else{
+                res.send({msg:'member list is empty'})
+            }
+            
+        }
+    })
+    
+}
+
 exports.memberinfo = (req,res)=>{
     console.log('id',req.params)
     var memberID = req.params.memberID;

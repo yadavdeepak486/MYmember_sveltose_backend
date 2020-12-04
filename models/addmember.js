@@ -15,7 +15,7 @@ const addmemberSchema = new mongoose.Schema(
             required:true
         },
         status:{
-            type: Number,
+            type: String,
         },
         dob:{
             type:String,
@@ -92,7 +92,6 @@ const addmemberSchema = new mongoose.Schema(
         customId:{
             type:String,
             required:true,
-            unique:true
         },
         leadsTracking:{
             type:String,
