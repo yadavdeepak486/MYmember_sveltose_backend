@@ -16,6 +16,7 @@ const addmemberSchema = new mongoose.Schema(
         },
         status:{
             type: String,
+            required:true
         },
         dob:{
             type:String,
@@ -31,9 +32,7 @@ const addmemberSchema = new mongoose.Schema(
         },
         email:{
             type:String,
-            required:true,  
-            unique: true
-        },
+         },
         primaryPhone:{
             type:String,
             required:true
@@ -43,16 +42,12 @@ const addmemberSchema = new mongoose.Schema(
         },
         address:{
             type:String,
-            require:true,
-            
         },
         country:{
             type:String,
-            require:true
         },
         state:{
             type:String,
-            require:true
         },
         zipPostalCode:{
             type:String
@@ -70,17 +65,16 @@ const addmemberSchema = new mongoose.Schema(
         },
         startDate:{
             type:String,
-            required:true
         },
         expiredDate:{
             type:String,
-            required:true
         },
         lastPromotion:{
             type:String
         },
         location:{
-            type:String
+            type:String,
+            required:true
         },
         ID:{
             type:String,
@@ -91,7 +85,6 @@ const addmemberSchema = new mongoose.Schema(
         },
         customId:{
             type:String,
-            required:true,
         },
         leadsTracking:{
             type:String,
@@ -103,11 +96,9 @@ const addmemberSchema = new mongoose.Schema(
         },
         intrested:{
             type:String,
-            required:true
         },
         school:{
             type:String,
-            require:true
         },
         addToGroup:{
             type:String
