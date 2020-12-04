@@ -16,7 +16,7 @@ const userSchema = new mongoose.Schema(
             required: true,
             maxlength: 32
         },
-      
+
         phone: {
             type: String,
             trim: true,
@@ -43,9 +43,12 @@ const userSchema = new mongoose.Schema(
             type: String,
             required: true
         },
-        profile_image:{
-            type:String
-                }
+        profile_image: {
+            type: String
+        }, reset_code: {
+            type: String,
+            default: ''
+        }
     },
     { timestamps: true }
 );
@@ -64,9 +67,9 @@ userSchema
 
 userSchema.methods = {
     authenticate: function (plainText) {
+        console.log(this.encryptPassword(plainText))
         return this.encryptPassword(plainText) === this.hashed_password;
     },
-
     encryptPassword: function (password) {
         if (!password) return '';
         try {

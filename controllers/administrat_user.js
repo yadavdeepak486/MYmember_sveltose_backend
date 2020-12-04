@@ -2,6 +2,10 @@ const administrate = require("../models/administrate_user");
 const { errorHandler } = require('../helpers/dbErrorHandler');
 const expressJwt = require('express-jwt'); // for authorization check
 const jwt = require('jsonwebtoken'); // to generate signed token
+const bcrypt = require('bcryptjs');
+const uuidv1 = require('uuid/v1');
+uuidv1()
+
 
 exports.signup = (req, res) => {
     console.log("req.body", req.body);
@@ -20,34 +24,34 @@ exports.signup = (req, res) => {
         user.hashed_password = undefined;
         const cloudenary = require("cloudinary").v2
         cloudenary.config({
-            cloud_name:  process.env.cloud_name,
+            cloud_name: process.env.cloud_name,
             api_key: process.env.cloud_api_key,
             api_secret: process.env.cloud_api_secret
         });
-        if(req.file){
-        console.log(req.file)
-        const path = req.file.path
-        const uniqueFilename = new Date().toISOString()
-        cloudenary.uploader.upload(
-            path,
-            { public_id: `blog/${uniqueFilename}`, tags: `blog` }, // directory and tags are optional
-            function (err, image) {
-                if (err) return res.send(err)
-                console.log('file uploaded to Cloudinary')
-                const fs = require('fs')
-                fs.unlinkSync(path)
-                administrate.findByIdAndUpdate(user._id, { $set: { profile_image: image.url } })
-                    .then((response) => {
-                        res.json(response)
-                    });
-            }
-        );
-        }else{
+        if (req.file) {
+            console.log(req.file)
+            const path = req.file.path
+            const uniqueFilename = new Date().toISOString()
+            cloudenary.uploader.upload(
+                path,
+                { public_id: `blog/${uniqueFilename}`, tags: `blog` }, // directory and tags are optional
+                function (err, image) {
+                    if (err) return res.send(err)
+                    console.log('file uploaded to Cloudinary')
+                    const fs = require('fs')
+                    fs.unlinkSync(path)
+                    administrate.findByIdAndUpdate(user._id, { $set: { profile_image: image.url } })
+                        .then((response) => {
+                            res.json(response)
+                        });
+                }
+            );
+        } else {
             res.json({
                 user
             });
         }
-       
+
     });
 };
 
@@ -65,9 +69,13 @@ exports.signin = (req, res) => {
                 error: 'User with that email does not exist. Please signup'
             });
         }
+
+        // consta = bcrypt.compare(user.hashed_password, function (err, hash) {
+         
         // if user is found make sure the email and password match
         // create authenticate method in user model
         if (!user.authenticate(password)) {
+            console.log(password)
             return res.status(401).json({
                 error: 'Email and password dont match'
             });
