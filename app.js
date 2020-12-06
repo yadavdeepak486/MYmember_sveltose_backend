@@ -33,6 +33,7 @@ const category_manag = require("./routes/category_manag")
 const expense = require("./routes/expences");
 const appointment = require('./routes/appointment')
 const events = require("./routes/events")
+const add_member = require("./routes/addmember")
 
 const app = express();
 const parser = bodyParser.urlencoded({
@@ -130,6 +131,7 @@ app.use("/api",category_manag)
 app.use("/api",expense);
 app.use("/api",appointment);
 app.use("/api",events)
+app.use("/api",add_member)
 
 const port = process.env.PORT || 8000;
 app.listen(port, () => {

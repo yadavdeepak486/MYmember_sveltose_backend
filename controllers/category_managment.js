@@ -20,7 +20,7 @@ exports.Create = async (req, res) => {
         category_managment.findByIdAndUpdate(cate_id, { $set: { category: categories[cate] } })
             .then((cat_resp) => {
                 sub_cate_id[cate].forEach((items) => {
-                    category_managment.findOne({:{ "$in":"subCategory" }}).populate("subCategory")
+                    category_managment.findOne({"category":{ "$in":"subCategory" }}).populate("subCategory")
                         .then((subCat_resp) => {
                             if (subCat_resp) {
                                 category_managment.findByIdAndUpdate(cate_id, { $set: { "subCategory.subCategories": data[cate] } }).populate("subCategory")
@@ -40,7 +40,7 @@ exports.Create = async (req, res) => {
                             }
                         })
                 });
-                { "city_id": { "$in": idList }
+                // { "city_id": { "$in": idList }
                 // category_managment.find({"subCategory.subCategories":data})
                 console.log(cat_resp)
             })
