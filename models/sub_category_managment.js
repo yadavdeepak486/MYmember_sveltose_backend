@@ -4,7 +4,7 @@ const { ObjectId } = mongoose.Schema;
 
 const subcategorySchema = new mongoose.Schema(
     {
-        subCategory: {
+        subCategories: {
             type: String
         }, lebelName: {
             type: String

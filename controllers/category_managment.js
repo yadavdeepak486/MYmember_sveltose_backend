@@ -15,7 +15,37 @@ exports.Create = async (req, res) => {
     const lebels = req.body.lebel;
     const data = req.body.sub_category;
     const color = req.body.color;
-    
+    const cate = 0
+    category_id.forEach(function (cate_id) {
+        category_managment.findByIdAndUpdate(cate_id, { $set: { category: categories[cate] } })
+            .then((cat_resp) => {
+                sub_cate_id[cate].forEach((items) => {
+                    category_managment.findOne({:{ "$in":"subCategory" }}).populate("subCategory")
+                        .then((subCat_resp) => {
+                            if (subCat_resp) {
+                                category_managment.findByIdAndUpdate(cate_id, { $set: { "subCategory.subCategories": data[cate] } }).populate("subCategory")
+                                    .then((sub_detail) => {
+                                        console.log(sub_detail);
+                                    }).catch((err) => {
+                                        res.send(err)
+                                    })
+                            } else {
+                                const newSub = {
+                                    subCategories:data[cate],
+                                    lebelName:lebels[cate],
+                                    color:color[cate]
+                                }
+
+
+                            }
+                        })
+                });
+                { "city_id": { "$in": idList }
+                // category_managment.find({"subCategory.subCategories":data})
+                console.log(cat_resp)
+            })
+        cate = cate + 1
+    });
     data.forEach(element => {
         const a = {
             subCategory: element,
@@ -33,7 +63,7 @@ exports.Create = async (req, res) => {
             })
             category_managment.findOne({ $and: [{ programName: program }, { category: categories }] })
                 .then((result) => {
-                    console.log("category hai",result)
+                    console.log("category hai", result)
                     if (result) {
                         category_managment.findByIdAndUpdate(result._id, { $push: { subCategory: sub_ids } })
                             .then((cate_resp) => {
