@@ -48,12 +48,19 @@ const userSchema = new mongoose.Schema(
         }, reset_code: {
             type: String,
             default: ''
+        },resetPasswordToken:{
+            type:String,
+            default:''
+        },resetPasswordExpires:{
+            type:String,
+            default:''
         }
     },
     { timestamps: true }
 );
 
 // virtual field
+
 userSchema
     .virtual('password')
     .set(function (password) {
