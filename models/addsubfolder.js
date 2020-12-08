@@ -1,9 +1,11 @@
 const mongoose = require('mongoose');
  
     const subfolderSchema = new mongoose.Schema({
-
+        folder_name:{
+            type:String
+        },
         subfolder_name:{
-                type:String
+                type:Array
             }         
             
       })
