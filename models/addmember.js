@@ -4,7 +4,6 @@ const addmemberSchema = new mongoose.Schema(
     {
         studentType:{
             type:String,
-            required:true
         },
         firstName:{
             type:String,
@@ -104,6 +103,9 @@ const addmemberSchema = new mongoose.Schema(
             type:String
         },
         familyName:{
+            type:String
+        },
+        memberprofileImage:{
             type:String
         }
     }
