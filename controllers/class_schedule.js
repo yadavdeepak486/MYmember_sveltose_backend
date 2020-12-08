@@ -24,10 +24,18 @@ exports.read = async (req, res) => {
             res.send(err)
         })
 };
-
+exports.class_schedule_Info = async (req, res) => {
+    const id = req.params.scheduleId
+    class_schedule.findById(id)
+        .then((result) => {
+            res.json(result)
+        }).catch((err) => {
+            res.send(err)
+        })
+};
 exports.update = async (req, res) => {
-    const id = req.body.id;
-    class_schedule.findByIdAndUpdate(id, { $set: req.body })
+    const id = req.params.scheduleId;
+    class_schedule.updateOne({ _id: id }, { $set: req.body })
         .then((update_resp) => {
             console.log(update_resp)
             res.send("class schedule has been updated successfully")
@@ -38,7 +46,7 @@ exports.update = async (req, res) => {
 };
 
 exports.remove = async (req, res) => {
-    const id = req.body.id
+    const id = req.params.scheduleId
     class_schedule.deleteOne({ _id: id })
         .then((resp) => {
             console.log(resp)

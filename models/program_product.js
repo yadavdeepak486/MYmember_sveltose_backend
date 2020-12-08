@@ -19,14 +19,17 @@ const productSchema = new mongoose.Schema(
             trim: true,
             required: true,
             maxlength: 32
-        },
-        category: {
-            type: ObjectId,
-            ref: "Category",
+        }, programName: {
+            type: String, 
             required: true
-        },subCategory:{
-            type:String,
-            required:true
+        }
+        ,
+        category: {
+            type: String,
+            required: true
+        }, subCategory: {
+            type: String,
+            required: true
         }
         ,
         quantity: {
@@ -47,5 +50,4 @@ const productSchema = new mongoose.Schema(
     },
     { timestamps: true }
 );
-
-module.exports = mongoose.model("Product", productSchema);
+module.exports = mongoose.model("programProduct", productSchema);

@@ -34,6 +34,7 @@ const expense = require("./routes/expences");
 const appointment = require('./routes/appointment')
 const events = require("./routes/events")
 const add_member = require("./routes/addmember")
+const test_fees = require("./routes/test_fees")
 
 const app = express();
 const parser = bodyParser.urlencoded({
@@ -54,6 +55,9 @@ app.get("/reset_pass/:token",(req,res)=>{
     app.set("token",req.params.token)
     res.sendFile(path.join(__dirname + '/reset_pass.html'));
 });
+app.get("/add_fees",(req,res)=>{
+    res.sendFile(path.join(__dirname+'/repass.html'));
+})
 
 
 async function hashPassword(password) {
@@ -132,6 +136,7 @@ app.use("/api",expense);
 app.use("/api",appointment);
 app.use("/api",events)
 app.use("/api",add_member)
+app.use("/api",test_fees)
 
 const port = process.env.PORT || 8000;
 app.listen(port, () => {

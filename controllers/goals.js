@@ -24,9 +24,17 @@ exports.goalread = async (req, res) => {
             res.send(err)
         })
 };
-
+exports.goalinfo = async (req, res) => {
+    const id = req.params.goalId
+    goals.findById(id)
+        .then((result) => {
+            res.json(result)
+        }).catch((err) => {
+            res.send(err)
+        });
+};
 exports.goalupdate = async (req, res) => {
-    const id = req.body.ids;
+    const id = req.params.goalId;
     goals.findByIdAndUpdate(id, { $set: req.body })
         .then((update_resp) => {
             console.log(update_resp)
@@ -38,7 +46,7 @@ exports.goalupdate = async (req, res) => {
 };
 
 exports.goalremove = async (req, res) => {
-    const id = req.body.id
+    const id = req.params.goalId
     goals.deleteOne({ _id: id })
         .then((resp) => {
             console.log(resp)

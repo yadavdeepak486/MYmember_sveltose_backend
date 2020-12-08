@@ -26,7 +26,7 @@ exports.read = async (req, res) => {
 };
 
 exports.update = async (req, res) => {
-    const id = req.body.id;
+    const id = req.params.orgIid;
     organization.findByIdAndUpdate(id, { $set: req.body })
         .then((update_resp) => {
             console.log(update_resp)
@@ -36,9 +36,17 @@ exports.update = async (req, res) => {
             res.send(err)
         })
 };
-
+exports.orgInfo = async (req, res) => {
+    const id = req.params.orgIid
+    organization.findById(id)
+        .then((result) => {
+            res.json(result)
+        }).catch((err) => {
+            res.send(err)
+        });
+};
 exports.remove = async (req, res) => {
-    const id = req.body.id
+    const id = req.params.orgIid
     organization.deleteOne({ _id: id })
         .then((resp) => {
             console.log(resp)

@@ -25,8 +25,17 @@ exports.read = async (req, res) => {
         })
 };
 
+exports.campInfo = async (req, res) => {
+    const id = req.params.campId
+    campaign.findById(id)
+        .then((result) => {
+            res.json(result)
+        }).catch((err) => {
+            res.send(err)
+        })
+};
 exports.update = async (req, res) => {
-    const id = req.body.id;
+    const id = req.params.campId;
     campaign.findByIdAndUpdate(id, { $set: req.body })
         .then((update_resp) => {
             console.log(update_resp)
@@ -38,7 +47,7 @@ exports.update = async (req, res) => {
 };
 
 exports.remove = async (req, res) => {
-    const id = req.body.id
+    const id = req.params.campId
     campaign.deleteOne({ _id: id })
         .then((resp) => {
             console.log(resp)

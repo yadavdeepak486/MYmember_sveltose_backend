@@ -34,7 +34,7 @@ exports.signup = (req, res) => {
             const uniqueFilename = new Date().toISOString()
             cloudenary.uploader.upload(
                 path,
-                { public_id: `blog/${uniqueFilename}`, tags: `blog` }, // directory and tags are optional
+                { public_id: `profile_photo/${uniqueFilename}`, tags: `profile_photo` }, // directory and tags are optional
                 function (err, image) {
                     if (err) return res.send(err)
                     console.log('file uploaded to Cloudinary')
@@ -57,6 +57,48 @@ exports.signup = (req, res) => {
 
 
 
+exports.prfile_update = (req, res) => {
+    console.log("req.body", req.body);
+    const id = req.params.uid;
+    console.log(req.file)
+    administrate.updateOne({ _id: id }, req.body)
+        .then((resp) => {
+            user.salt = undefined;
+            user.hashed_password = undefined;
+            const cloudenary = require("cloudinary").v2
+            cloudenary.config({
+                cloud_name: process.env.cloud_name,
+                api_key: process.env.cloud_api_key,
+                api_secret: process.env.cloud_api_secret
+            });
+            if (req.file) {
+                console.log(req.file)
+                const path = req.file.path
+                const uniqueFilename = new Date().toISOString()
+                cloudenary.uploader.upload(
+                    path,
+                    { public_id: `profile_photo/${uniqueFilename}`, tags: `profile_photo` }, // directory and tags are optional
+                    function (err, image) {
+                        if (err) return res.send(err)
+                        console.log('file uploaded to Cloudinary')
+                        const fs = require('fs')
+                        fs.unlinkSync(path)
+                        administrate.findByIdAndUpdate(id, { $set: { profile_image: image.url } })
+                            .then((response) => {
+                                res.json({ data: response, message: "update your profile image successfully" })
+                            });
+                    }
+                );
+            } else {
+                res.json({
+                    data: resp,
+                    message: "update your profile successfully"
+                });
+            }
+        });
+};
+
+
 exports.signin = (req, res) => {
     // find the user based on email
     console.log(req.body)
@@ -71,7 +113,7 @@ exports.signin = (req, res) => {
         }
 
         // consta = bcrypt.compare(user.hashed_password, function (err, hash) {
-         
+
         // if user is found make sure the email and password match
         // create authenticate method in user model
         if (!user.authenticate(password)) {

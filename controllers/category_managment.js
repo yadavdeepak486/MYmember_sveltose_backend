@@ -3,91 +3,114 @@ const subCategory_managment = require("../models/sub_category_managment")
 const { errorHandler } = require('../helpers/dbErrorHandler');
 const { result } = require("lodash");
 // const todo = require("../models/todo_schema")
-
+exports.createCate = async(req,res)=>{
+    const program = req.body.program;
+    const category = req.body.category_name;
+    const sub_category = req.body.add_sub_category;
+    const new_labals = req.body.enter_label;
+    const newColor = req.body.color;
+    
+    // const datas = req.body.
+}
 
 exports.Create = async (req, res) => {
     const program = req.body.program;
     const category_id = req.body.cate_id;
     const sub_cate_id = req.body.subCate_id;
-    const categories = req.body.category;
-    const ids = [];
-    var i = 0;
-    const lebels = req.body.lebel;
-    const data = req.body.sub_category;
-    const color = req.body.color;
+    // const categories = req.body.category;
+    const new_categ = req.body.category_name;
+    const new_subCateg = req.body.add_sub_category;
+    const new_labals = req.body.enter_label;
+    const newColor = req.body.color;
+    // const lebels = req.body.lebel;
+    // const data = req.body.sub_category;
+    // const color = req.body.color;
     const cate = 0
     category_id.forEach(function (cate_id) {
         category_managment.findByIdAndUpdate(cate_id, { $set: { category: categories[cate] } })
             .then((cat_resp) => {
                 sub_cate_id[cate].forEach((items) => {
-                    category_managment.findOne({"category":{ "$in":"subCategory" }}).populate("subCategory")
+                    category_managment.findOne({ items: { "$in": "subCategory" } }).populate("subCategory")
                         .then((subCat_resp) => {
-                            if (subCat_resp) {
-                                category_managment.findByIdAndUpdate(cate_id, { $set: { "subCategory.subCategories": data[cate] } }).populate("subCategory")
-                                    .then((sub_detail) => {
-                                        console.log(sub_detail);
-                                    }).catch((err) => {
-                                        res.send(err)
+                            for (var details = 0; data[cate].length; details++) {
+                                if (subCat_resp) {
+                                    category_managment.findByIdAndUpdate(subCat_resp._id, { $set: { "subCategory.subCategories": details } }).populate("subCategory")
+                                        .then((sub_detail) => {
+                                            console.log(sub_detail);
+                                        })
+                                } else {
+                                    const newSub = new subCategory_managment({
+                                        subCategories: data[cate][details],
+                                        lebelName: lebels[cate][details],
+                                        color: color[cate][details]
                                     })
-                            } else {
-                                const newSub = {
-                                    subCategories:data[cate],
-                                    lebelName:lebels[cate],
-                                    color:color[cate]
+                                    newSub.save()
+                                        .then((result) => {
+                                            category_managment.findByIdAndUpdate(subCat_resp._id, { $set: { "subCategory.subCategories": details } }).populate("subCategory")
+                                                .then((sub_detail) => {
+                                                    console.log(sub_detail);
+                                                });
+                                            console.log(result)
+                                        })
                                 }
-
-
                             }
-                        })
+                        });
                 });
-                // { "city_id": { "$in": idList }
-                // category_managment.find({"subCategory.subCategories":data})
                 console.log(cat_resp)
             })
         cate = cate + 1
     });
-    data.forEach(element => {
-        const a = {
-            subCategory: element,
-            lebelName: lebels[i],
-            color: color[i]
-        }
-        ids.push(a)
-        i = i + 1
-    });
-    subCategory_managment.insertMany(ids)
-        .then((resp) => {
-            const sub_ids = []
-            resp.forEach(items => {
-                sub_ids.push(items._id)
+
+    if (new_categ !== undefined) {
+        for (var j = 0; j < new_categ.length; j++) {
+            const ids = [];
+            const categ = new_categ[j]
+
+            const new_cate = new category_managment({
+                category: categ,
+                programName: program
             })
-            category_managment.findOne({ $and: [{ programName: program }, { category: categories }] })
-                .then((result) => {
-                    console.log("category hai", result)
-                    if (result) {
-                        category_managment.findByIdAndUpdate(result._id, { $push: { subCategory: sub_ids } })
-                            .then((cate_resp) => {
-                                console.log(cate_resp)
-                                res.send("category updated sucessful");
+            new_cate.save()
+                .then((response) => {
+                    if (new_categ !== undefined) {
+                        const newSub = 0;
+                        for (var i = cate; i < new_categ[j].length; i++) {
+                            const a = {
+                                subCategory: new_subCateg[newSub][i],
+                                lebelName: new_labals[newSub][i],
+                                color: newColor[newSub][i]
+                            }
+                            ids.push(a)
+                        }
+                        subCategory_managment.insertMany(ids)
+                            .then((resp) => {
+                                const sub_ids = []
+                                resp.forEach(items => {
+                                    sub_ids.push(items._id)
+                                });
+                                category_managment.findOne({ $and: [{ programName: program }, { category: categ }] })
+                                    .then((result) => {
+                                        if (result) {
+                                            console.log("category already exist create anathor")
+                                        } else {
+                                            console.log(response)
+                                            category_managment.findByIdAndUpdate(result._id, { $push: { subCategory: sub_ids } })
+                                                .then((cate_resp) => {
+                                                    console.log(cate_resp)
+                                                    res.send("category added sucessful");
+                                                });
+                                        }
+                                    })
                             })
                     } else {
-                        const new_cate = new category_managment({
-                            category: categories,
-                            programName: program
-                        })
-                        new_cate.save()
-                            .then((response) => {
-                                console.log(response)
-                                category_managment.findByIdAndUpdate(response._id, { $push: { subCategory: sub_ids } })
-                                    .then((cate_resp) => {
-                                        console.log(cate_resp)
-                                        res.send("category added sucessful");
-                                    });
-                            })
+                        res.send("You didn't choose any sub categories")
                     }
                 })
 
-        })
+        }
+    } else {
+        res.send("data saved")
+    }
 };
 
 exports.read = async (req, res) => {
@@ -110,30 +133,6 @@ exports.by_program_name = async (req, res) => {
         });
 };
 
-exports.update = async (req, res) => {
-    const id = req.body.id;
-    const prog_name = req.body.pro_name;
-    if (req.body.category) {
-        category_managment.findByIdAndUpdate({ _id: id }, { $set: { category: req.body.category } })
-            .then((update_resp) => {
-                console.log(update_resp)
-                res.send("category_managment has been updated successfully")
-            }).catch((err) => {
-                console.log(err)
-                res.send(err)
-            })
-    } else {
-        category_managment.findByIdAndUpdate({ _id: id }, { $set: req.body })
-            .then((update_resp) => {
-                console.log(update_resp)
-                res.send("category_managment has been updated successfully")
-            }).catch((err) => {
-                console.log(err)
-                res.send(err)
-            })
-    }
-
-};
 
 exports.remove = async (req, res) => {
     const id = req.body.id

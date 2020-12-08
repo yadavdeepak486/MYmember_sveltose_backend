@@ -10,6 +10,7 @@ exports.create = (req, res) => {
                 error: errorHandler(err)
             });
         }
+        if(req.file){
         const cloudenary = require("cloudinary").v2
         cloudenary.config({
             cloud_name: process.env.cloud_name,
@@ -28,17 +29,19 @@ exports.create = (req, res) => {
                 fs.unlinkSync(path)
                 program.findByIdAndUpdate(data._id, { $set: { program_image: image.url } })
                     .then((response) => {
-                        res.json(response)
+                        res.send("data and image added successfully")
                     });
             }
         );
+        }else{
+            res.send("data added successfully")
+        }
     });
 };
 
 
 exports.read = (req, res) => {
-    const uid = req.body.uid;
-    program.find({ userId: uid })
+    program.find()
         .then((category) => {
             res.json(category)
         }).catch((err) => {
@@ -47,12 +50,47 @@ exports.read = (req, res) => {
         })
 };
 
-exports.update = (req, res) => {
-    const uid = req.body.uid;
-    program.updateOne({ userId: uid }, req.body)
+exports.programs_detail = async (req, res) => {
+    const id = req.params.proId
+    program.findById(id)
         .then((result) => {
-            res.send(result);
-            console.log(result);
+            res.json(result)
+        }).catch((err) => {
+            res.send(err)
+        });
+};
+
+exports.update = (req, res) => {
+    const uid = req.params.proId;
+    program.updateOne({ _id: uid }, req.body)
+        .then((result) => {
+            if (req.file) {
+                const cloudenary = require("cloudinary").v2
+                cloudenary.config({
+                    cloud_name: process.env.cloud_name,
+                    api_key: process.env.cloud_api_key,
+                    api_secret: process.env.cloud_api_secret
+                });
+                const path = req.file.path
+                const uniqueFilename = new Date().toISOString()
+                cloudenary.uploader.upload(
+                    path,
+                    { public_id: `blog/${uniqueFilename}`, tags: `blog` }, // directory and tags are optional
+                    function (err, image) {
+                        if (err) return res.send(err)
+                        console.log('file uploaded to Cloudinary')
+                        const fs = require('fs')
+                        fs.unlinkSync(path)
+                        program.findByIdAndUpdate(uid, { $set: { program_image: image.url } })
+                            .then((response) => {
+                                res.json(response)
+                            });
+                    }
+                );
+            } else {
+                res.send(result);
+                console.log(result);
+            }
         }).catch((err) => {
             console.log(err);
             res.send(err);
@@ -61,8 +99,8 @@ exports.update = (req, res) => {
 
 
 exports.remove = (req, res) => {
-    const uid = req.body.uid;
-    product.remove({ userId: uid })
+    const uid = req.params.proId;
+    product.remove({ _id: uid })
         .then((resp) => {
             console.log(resp);
             res.json({ data: resp, message: "program deleted succesfuly" });

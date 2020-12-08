@@ -121,7 +121,7 @@ exports.updatemember = (req, res) => {
         familyName: data.familyName
     }).exec((err, data) => {
         if (err) {
-            res.send({ error: 'member is not delete' })
+            res.send({ error: 'member is not updated' })
         }
         else {
             res.send({ msg: 'member is update' })

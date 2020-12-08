@@ -37,9 +37,7 @@ const programSchema = new mongoose.Schema(
             required: true,
             type: String
         },userId:{
-            type:String,
-            required:true
-        }
+            type:String        }
     },
     { timestamps: true }
 );

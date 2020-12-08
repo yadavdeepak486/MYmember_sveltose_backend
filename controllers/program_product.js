@@ -1,12 +1,12 @@
 const formidable = require('formidable');
 const _ = require('lodash');
 const fs = require('fs');
-const Product = require('../models/product');
+const program_product = require('../models/program_product');
 const { errorHandler } = require('../helpers/dbErrorHandler');
+const { response } = require('express');
 
 exports.productById = (req, res, next, id) => {
-    Product.findById(id)
-        .populate('category')
+    program_product.findById(id)
         .exec((err, product) => {
             if (err || !product) {
                 return res.status(400).json({
@@ -24,54 +24,46 @@ exports.read = (req, res) => {
 };
 
 exports.create = (req, res) => {
-    let form = new formidable.IncomingForm();
-    form.keepExtensions = true;
-    form.parse(req, (err, fields, files) => {
-        if (err) {
-            return res.status(400).json({
-                error: 'Image could not be uploaded'
-            });
-        }
-        // check for all fields
-        const { name, description, price, category, quantity, shipping,subCategory } = fields;
-
-        if (!name || !description || !price || !category || !quantity || !shipping || subCategory) {
-            return res.status(400).json({
-                error: 'All fields are required'
-            });
-        }
-
-        let product = new Product(fields);
-
-        // 1kb = 1000
-        // 1mb = 1000000
-
-        if (files.photo) {
-            // console.log("FILES PHOTO: ", files.photo);
-            if (files.photo.size > 1000000) {
-                return res.status(400).json({
-                    error: 'Image should be less than 1mb in size'
-                });
-            }
-            product.photo.data = fs.readFileSync(files.photo.path);
-            product.photo.contentType = files.photo.type;
-        }
-
-        product.save((err, result) => {
-            if (err) {
-                console.log('PRODUCT CREATE ERROR ', err);
-                return res.status(400).json({
-                    error: errorHandler(err)
-                });
-            }
-            res.json(result);
+    const { name, description, programName, price, category, quantity, shipping, subCategory } = fields;
+    if (req.file) {
+        return res.status(400).json({
+            error: 'Image could not be uploaded'
         });
+    }
+    // check for all fields
+    if (!name || !description || !price || !category || !quantity || !shipping || subCategory || programName) {
+        return res.status(400).json({
+            error: 'All fields are required'
+        });
+    }
+
+    let product = new program_product(fields);
+
+    // 1kb = 1000
+    // 1mb = 1000000
+    if (files.photo) {
+        if (files.photo.size > 1000000) {
+            return res.status(400).json({
+                error: 'Image should be less than 1mb in size'
+            });
+        }
+        product.photo.data = fs.readFileSync(files.photo.path);
+        product.photo.contentType = files.photo.type;
+    }
+    product.save((err, result) => {
+        if (err) {
+            console.log('PRODUCT CREATE ERROR ', err);
+            return res.status(400).json({
+                error: errorHandler(err)
+            });
+        }
+        res.json(result);
     });
 };
 
 exports.remove = (req, res) => {
-    let product = req.product;
-    product.remove((err, deletedProduct) => {
+    let product = req.params.productId;
+    program_product.remove({ _id: product }, (err, deletedProduct) => {
         if (err) {
             return res.status(400).json({
                 error: errorHandler(err)
@@ -83,42 +75,52 @@ exports.remove = (req, res) => {
     });
 };
 
+
 exports.update = (req, res) => {
-    let form = new formidable.IncomingForm();
-    form.keepExtensions = true;
-    form.parse(req, (err, fields, files) => {
-        if (err) {
-            return res.status(400).json({
-                error: 'Image could not be uploaded'
-            });
-        }
-
-        let product = req.product;
-        product = _.extend(product, fields);
-
-        // 1kb = 1000
-        // 1mb = 1000000
-
-        if (files.photo) {
-            // console.log("FILES PHOTO: ", files.photo);
-            if (files.photo.size > 1000000) {
-                return res.status(400).json({
-                    error: 'Image should be less than 1mb in size'
-                });
-            }
-            product.photo.data = fs.readFileSync(files.photo.path);
-            product.photo.contentType = files.photo.type;
-        }
-
-        product.save((err, result) => {
-            if (err) {
-                return res.status(400).json({
-                    error: errorHandler(err)
-                });
-            }
-            res.json(result);
+    const data = req.body;
+    const product_id = req.params.productId;
+    if (req.file) {
+        return res.status(400).json({
+            error: 'Image could not be uploaded'
         });
-    });
+    }
+    let product = req.product;
+    product = _.extend(product, fields);
+    // 1kb = 1000
+    // 1mb = 1000000
+    if (req.file.size > 1000000) {
+        return res.status(400).json({
+            error: 'Image should be less than 1mb in size'
+        });
+    }
+    program_product.updateOne({ _id: product_id }, data)
+        .then((response) => {
+            console.log(req.file)
+            cloudenary.config({
+                cloud_name: process.env.cloud_name,
+                api_key: process.env.cloud_api_key,
+                api_secret: process.env.cloud_api_secret
+            });
+            const path = req.file.path
+            const uniqueFilename = new Date().toISOString()
+            cloudenary.uploader.upload(
+                path,
+                { public_id: `product_photo/${uniqueFilename}`, tags: `photo` }, // directory and tags are optional
+                function (err, image) {
+                    if (err) return res.send(err)
+                    console.log('file uploaded to Cloudinary')
+                    const fs = require('fs')
+                    fs.unlinkSync(path)
+                    program_product.updateOne({ _id: product_id }, { $set: { photo: image.url } })
+                        .then((response) => {
+                            console.log(response)
+                            res.send(response)
+                        });
+                }
+            );
+        }).catch((err) => {
+            res.send(err)
+        })
 };
 
 /**
@@ -132,10 +134,8 @@ exports.list = (req, res) => {
     let order = req.query.order ? req.query.order : 'asc';
     let sortBy = req.query.sortBy ? req.query.sortBy : '_id';
     let limit = req.query.limit ? parseInt(req.query.limit) : 6;
-
-    Product.find()
+    program_product.find()
         .select('-photo')
-        .populate('category')
         .sort([[sortBy, order]])
         .limit(limit)
         .exec((err, products) => {
@@ -155,10 +155,9 @@ exports.list = (req, res) => {
 
 exports.listRelated = (req, res) => {
     let limit = req.query.limit ? parseInt(req.query.limit) : 6;
-
-    Product.find({ _id: { $ne: req.product }, category: req.product.category })
+    program_product.find({ _id: { $ne: req.product }, category: req.product.category })
         .limit(limit)
-        .populate('category', '_id name')
+        // .populate('category', '_id name')
         .exec((err, products) => {
             if (err) {
                 return res.status(400).json({
@@ -170,7 +169,7 @@ exports.listRelated = (req, res) => {
 };
 
 exports.listCategories = (req, res) => {
-    Product.distinct('category', {}, (err, categories) => {
+    program_product.distinct('category', {}, (err, categories) => {
         if (err) {
             return res.status(400).json({
                 error: 'Categories not found'
@@ -213,9 +212,8 @@ exports.listBySearch = (req, res) => {
         }
     }
 
-    Product.find(findArgs)
+    program_product.find(findArgs)
         .select('-photo')
-        .populate('category')
         .sort([[sortBy, order]])
         .skip(skip)
         .limit(limit)
@@ -252,7 +250,7 @@ exports.listSearch = (req, res) => {
         }
         // find the product based on query object with 2 properties
         // search and category
-        Product.find(query, (err, products) => {
+        program_product.find(query, (err, products) => {
             if (err) {
                 return res.status(400).json({
                     error: errorHandler(err)
@@ -273,7 +271,7 @@ exports.decreaseQuantity = (req, res, next) => {
         };
     });
 
-    Product.bulkWrite(bulkOps, {}, (error, products) => {
+    program_product.bulkWrite(bulkOps, {}, (error, products) => {
         if (error) {
             return res.status(400).json({
                 error: 'Could not update product'

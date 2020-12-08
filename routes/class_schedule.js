@@ -9,7 +9,8 @@ const parser = bodyParser.urlencoded({
 
 router.post("/add_classSchedule/:user_id",parser,requireSignin,class_schedule.Create);
 router.get("/list_of_classSchedule/:user_id",parser,requireSignin,class_schedule.read);
-router.post("/update_classSchedule/:user_id",parser,requireSignin,class_schedule.update);
-router.get("/delete_classSchedule/:user_id",parser,requireSignin,class_schedule.remove);
+router.post("/update_classSchedule/:user_id/:scheduleId",parser,requireSignin,class_schedule.update);
+router.get("/class_schedule_by_id/:user_id/:scheduleId",parser,requireSignin,class_schedule.class_schedule_Info)
+router.get("/delete_classSchedule/:user_id/:scheduleId",parser,requireSignin,class_schedule.remove);
 
 module.exports = router;

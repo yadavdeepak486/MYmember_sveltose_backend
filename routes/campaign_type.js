@@ -9,7 +9,8 @@ const parser = bodyParser.urlencoded({
 
 router.post("/add_campaign_type/:user_id",parser,requireSignin,campaign.Create);
 router.get("/list_of_campaign_type/:user_id",parser,requireSignin,campaign.read);
-router.post("/update_campaign_type/:user_id",parser,requireSignin,campaign.update);
-router.get("/delete_campaign_type/:user_id",parser,requireSignin,campaign.remove);
+router.post("/update_campaign_type/:user_id/:campId",parser,requireSignin,campaign.update);
+router.get("/camp_info/:user_id/:campId",parser,requireSignin,campaign.campInfo)
+router.get("/delete_campaign_type/:user_id/:campId",parser,requireSignin,campaign.remove);
 
 module.exports = router;
