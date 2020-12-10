@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { create,read } = require('../controllers/support') 
 const multer = require('multer')
+const { requireSignin } = require('../controllers/auth');
 
 var store = multer.diskStorage({
     destination: function(req, file, cb){
@@ -17,10 +18,8 @@ router.get('/createticket',(req,res)=>{
   res.render('support')
 })
 
-router.get('/viewticket',read)
+router.get('/viewticket', requireSignin,read)
 
-router.post('/createticket',upload.single('image'),create)
-
-
+router.post('/createticket', requireSignin,upload.single('image'),create)
 
 module.exports = router;

@@ -9,9 +9,6 @@ var addfolderSchema = new schema({
      type:String
    },
    files:[{type:schema.Types.ObjectId,ref:'document'}] ,
-   _id:{
-     type:mongoose.Types.ObjectId
-   }
 
 })
 

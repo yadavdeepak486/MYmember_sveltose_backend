@@ -1,19 +1,22 @@
 const addfolderModal = require('../models/document'); // folder create modal
-
 const documentModal = require('../models/create_document') // create document modal
+const cloudinary = require("cloudinary").v2
+
+var fs = require('fs');
+var path = require('path')
+
+
 
 exports.createFolder = (req,res) =>{
-    var foldername = req.body.folder_name;
+    var folder_name = req.body.folder_name;
     var userId = req.params.userID;   
-    console.log(foldername,userId)
+    console.log(folder_name,userId)
     
     var folderdetails ={}
-    folderdetails.folder_name = foldername;
+    folderdetails.folder_name = folder_name;
     folderdetails.userId = userId;
-
-    console.log(folderdetails)
-
     var folderObj = new addfolderModal(folderdetails);
+
     console.log(folderObj)
     folderObj.save((err,data)=>{
             if(err){
@@ -27,48 +30,60 @@ exports.createFolder = (req,res) =>{
 
 exports.createDocument = (req,res)=>{
     var foldername = req.body.folder_name;
-    var documentDetails = {}
+    var file_name  = req.files.name + Date.now()
+    console.log(file_name);
     
-    documentDetails.folder_name = req.body.folder_name;
-    documentDetails.document_name = req.body.doc_name;
-    documentDetails.file =req.file.filename;
+    // var documentDetails = {}
+    
+    // documentDetails.folder_name = req.body.folder_name;
+    // documentDetails.document_name = req.body.doc_name;
+    // documentDetails.file =req.files.name;
+    
+    // console.log(req.files)
 
     
-    var documentObj = new documentModal(documentDetails);
+//     var documentObj = new documentModal(documentDetails);
      
-    documentObj.save((err,document)=>{
-        console.log(document)
-         if(err){
-             res.send({error:'document not upload'});
-         }
-         else{
-          console.log(foldername)
-              addfolderModal.find({"folder_name":foldername }).exec((err,folder)=>{
-              console.log(folder[0]._id, document.file)
+//     documentObj.save((err,document)=>{
+//         console.log(document)
+//            if(err){ 
+//                 console.log('document not upload')
+//            }   else{
 
-              addfolderModal.findByIdAndUpdate({_id:folder[0]._id},{ $push:{files:document._id} }).exec((err,data)=>{
+//               addfolderModal.find({"folder_name":foldername }).exec((err,folder)=>{
+//               console.log(folder[0]._id, document.file)
 
-                    if(err){
-                        res.send({error:'file not push'})
-                    }
-                    else{
-                        res.send({msg:" document upload"})
-                    }                  
-              })
-        })
-     
-     }
-   })
+//               addfolderModal.findByIdAndUpdate({_id:folder[0]._id},{ $push:{files:document._id} }).exec((err,data)=>{
+
+//                     if(err){
+//                         res.send({error:'file not push'})
+//                     }
+//                     else{
+//                         res.send({msg:" document upload"})
+//                     }                  
+//               })
+//         })
+    
+//          }
+//    })
 }
 
 exports.folderlist =(req,res)=>{
     var id = req.params.id;
     console.log(id)
-    addfolderModal.findOne({_id:id})
+    addfolderModal.findById(id)
     .populate('files')
     .exec((err,data)=>{
-        res.send(data)
-        console.log(err)
+        if(err){
+            console.log(err)
+        }
+        else{
+            res.send(data)
+        }
     })
+}
+
+exports.read = (req,res)=>{
+    
 }
 
