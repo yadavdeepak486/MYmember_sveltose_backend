@@ -35,7 +35,8 @@ const appointment = require('./routes/appointment')
 const events = require("./routes/events")
 const add_member = require("./routes/addmember")
 const test_fees = require("./routes/test_fees")
-
+const pcategory = require("./routes/pcategory")
+const psubcategory = require("./routes/psubcategory")
 const app = express();
 const parser = bodyParser.urlencoded({
     extended: false
@@ -115,6 +116,7 @@ app.use(expressValidator());
 app.use(cors());
 
 // routes middleware
+
 app.use('/api', authRoutes);
 app.use('/api', userRoutes);
 app.use('/api', categoryRoutes);
@@ -137,6 +139,8 @@ app.use("/api",appointment);
 app.use("/api",events)
 app.use("/api",add_member)
 app.use("/api",test_fees)
+app.use("/api",pcategory)
+app.use("/api",psubcategory)
 
 const port = process.env.PORT || 8000;
 app.listen(port, () => {

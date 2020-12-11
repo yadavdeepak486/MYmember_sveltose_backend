@@ -102,7 +102,8 @@ exports.stripe_detail = async (req, res) => {
 };
 
 exports.remove = (req, res) => {
-    const uid = req.params.stripeId;
+    var uid = req.params.stripeId;
+    console.log('userid',uid)
     stripe.remove({ _id: uid })
         .then((resp) => {
             console.log(resp);

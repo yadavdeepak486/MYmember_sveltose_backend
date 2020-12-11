@@ -23,7 +23,7 @@ var upload = multer({ storage: storage });
 router.post("/add_expenses/:user_id",parser,upload.single("image"),requireSignin,expenses.Create);
 router.get("/list_of_expenses/:user_id",parser,requireSignin,expenses.read);
 router.get("/expence_info/:user_id/:expenseId",parser,requireSignin,expenses.expenseInfo)
-router.post("/update_expenses/:user_id/:expenseId",parser,requireSignin,expenses.update);
-router.get("/delete_expenses/:user_id/:expenseId",parser,upload.single("image"),requireSignin,expenses.remove);
+router.put("/update_expenses/:user_id/:expenseId",parser,requireSignin,expenses.update);
+router.delete("/delete_expenses/:user_id/:expenseId",parser,upload.single("image"),requireSignin,expenses.remove);
 
 module.exports = router;

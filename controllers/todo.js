@@ -4,7 +4,8 @@ const { errorHandler } = require('../helpers/dbErrorHandler');
 
 
 exports.todoCreate = async (req, res) => {
-    const task = new tasks(req.body);
+const task = new tasks(req.body);
+    
     task.save((err, data) => {
         if (err) {
             return res.status(400).json({
@@ -23,7 +24,6 @@ exports.taskread = async (req, res) => {
             res.send(err)
         })
 }
-
 
 exports.taskinfo = async (req, res) => {
     const id = req.params.todoId

@@ -22,10 +22,11 @@ var storage = multer.diskStorage({
 });
 
 var upload = multer({ storage:storage });
+
 router.post('/test_fees/:userId',parser,upload.single("image"),requireSignin,create) 
 router.get('/test/fees_list/:userID',parser,requireSignin,read )
 router.get('/test/feesrinfo/:userID/:feeId',parser,requireSignin,fee_info)
 router.delete('/test/feesdelete/:userID/:feeId',parser,requireSignin,deletetestfee)
-router.post('/test/testfeesupdate/:userID/:feeId',upload.single("image"),parser,requireSignin,updatetestFee)
+router.put('/test/testfeesupdate/:userID/:feeId',upload.single("image"),parser,requireSignin,updatetestFee)
 
 module.exports = router

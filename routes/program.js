@@ -14,9 +14,10 @@ var storage = multer.diskStorage({
 });
 var upload = multer({ storage: storage });
 
-router.post("/add_program/:user_id",isAuth, requireSignin,upload.single("program_image"),program.create);
-router.get("/list_of_program/:user_id",isAuth, requireSignin,program.read);
-router.get("/program_details/:user_id/:proId",isAuth,requireSignin,program.programs_detail)
-router.post("/update_program/:user_id/:proId",isAuth, upload.single("program_image"),requireSignin,program.update);
-router.delete("/delete_program/:user_id/:proId",isAuth, requireSignin,program.remove);
+router.post("/add_program/:user_id",requireSignin,upload.single("program_image"),program.create);
+router.get("/list_of_program/:user_id", requireSignin,program.read);
+router.get("/program_details/:user_id/:proId",requireSignin,program.programs_detail)
+router.put("/update_program/:user_id/:proId",isAuth, upload.single("program_image"),requireSignin,program.update);
+router.delete("/delete_program/:user_id/:proId",isAuth,requireSignin,program.remove);
+
 module.exports = router;

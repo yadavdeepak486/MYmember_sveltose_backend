@@ -16,7 +16,7 @@ var upload = multer({ storage: storage });
 
 router.post("/add_stripe/:user_id",isAuth,requireSignin,upload.single("stripe_image"),stripe.create);
 router.get("/list_of_stripe/:user_id",isAuth,requireSignin,stripe.read);
-router.post("/update_stripe/:user_id/:stripeId",isAuth,requireSignin,stripe.update);
+router.put("/update_stripe/:user_id/:stripeId",isAuth,requireSignin,stripe.update);
 router.get("/stripe_info/:user_id/:stripeId",isAuth,requireSignin,stripe.stripe_detail)
-router.post("/delete_stripe/:user_id/:stripeId",isAuth,upload.single("stripe_image"),requireSignin,stripe.remove);
+router.delete("/delete_stripe/:user_id/:stripeId",isAuth,requireSignin,stripe.remove);
 module.exports = router;

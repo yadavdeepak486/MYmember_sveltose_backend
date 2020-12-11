@@ -9,8 +9,8 @@ const parser = bodyParser.urlencoded({
 
 router.post("/add_goals/:user_id",parser,requireSignin,isAuth,goals.goalCreate);
 router.get("/list_of_goals/:user_id",parser,requireSignin,isAuth,goals.goalread);
-router.post("/update_goals/:user_id/:goalId",parser,isAuth,requireSignin,goals.goalupdate);
+router.put("/update_goals/:user_id/:goalId",parser,isAuth,requireSignin,goals.goalupdate);
 router.get("/goals_info/:user_id/:goalId",parser,isAuth,requireSignin,goals.goalinfo);
-router.get("/delete_goals/:user_id/:goalId",parser,requireSignin,isAuth,goals.goalremove);
+router.delete("/delete_goals/:user_id/:goalId",parser,requireSignin,isAuth,goals.goalremove);
 
 module.exports = router;

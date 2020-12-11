@@ -23,11 +23,11 @@ const programSchema = new mongoose.Schema(
             required: true
         },
         rank_order: {
-            type: String,
+            type: Number,
             required:true
         },
         rank_image: {
-            // data: Buffer,
+            //data: Buffer,
             type: String
         }
     },

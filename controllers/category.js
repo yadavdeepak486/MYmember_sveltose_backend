@@ -15,13 +15,16 @@ exports.categoryById = (req, res, next, id) => {
 };
 
 exports.create = (req, res) => {
+    const program_name = req.body.program_name
     const category = new Category(req.body);
-    category.save((err, data) => {
+    category.save((err, Cat) => {
+
         if (err) {
             return res.status(400).json({
                 error: errorHandler(err)
             });
         }
+        //new
         res.json({ data });
     });
 };
@@ -32,8 +35,8 @@ exports.read = (req, res) => {
 
 exports.update = (req, res) => {
     console.log('req.body', req.body);
-    console.log('category update param', req.params.categoryId);
 
+    console.log('category update param', req.params.categoryId);
     const category = req.category;
     category.name = req.body.name;
     category.save((err, data) => {
@@ -48,6 +51,7 @@ exports.update = (req, res) => {
 
 exports.remove = (req, res) => {
     const category = req.category;
+   
     Product.find({ category }).exec((err, data) => {
         if (data.length >= 1) {
             return res.status(400).json({
@@ -76,5 +80,6 @@ exports.list = (req, res) => {
             });
         }
         res.json(data);
+        
     });
 };

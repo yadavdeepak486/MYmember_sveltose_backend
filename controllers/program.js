@@ -1,4 +1,5 @@
 const program = require("../models/program");
+
 // var s = require("../uploads")
 
 
@@ -50,14 +51,21 @@ exports.read = (req, res) => {
         })
 };
 
-exports.programs_detail = async (req, res) => {
-    const id = req.params.proId
+exports.programs_detail = (req, res) => {
+    var id = req.params.proId
+    console.log(id)
     program.findById(id)
-        .then((result) => {
-            res.json(result)
-        }).catch((err) => {
-            res.send(err)
-        });
+   .populate('program_category')
+   .exec((err,data)=>{
+                if(err){
+                    console.log(err)
+                    res.send({error:'category is not populate'})
+                }
+                else{
+                    res.send(data)
+                }
+            })
+      
 };
 
 exports.update = (req, res) => {
@@ -100,7 +108,7 @@ exports.update = (req, res) => {
 
 exports.remove = (req, res) => {
     const uid = req.params.proId;
-    product.remove({ _id: uid })
+    program.remove({ _id: uid })
         .then((resp) => {
             console.log(resp);
             res.json({ data: resp, message: "program deleted succesfuly" });

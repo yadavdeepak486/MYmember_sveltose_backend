@@ -4,11 +4,15 @@ const { errorHandler } = require('../helpers/dbErrorHandler');
 
 
 exports.Create = async (req, res) => {
+    console.log(req.body)
     const task = new class_schedule(req.body);
+    
     task.save((err, data) => {
         if (err) {
+            console.log(err)
             return res.status(400).json({
                 error: errorHandler(err)
+                
             });
         }
         console.log(data)
@@ -35,7 +39,9 @@ exports.class_schedule_Info = async (req, res) => {
 };
 exports.update = async (req, res) => {
     const id = req.params.scheduleId;
-    class_schedule.updateOne({ _id: id }, { $set: req.body })
+    console.log(id)
+    console.log(req.body)
+    class_schedule.findByIdAndUpdate(id, { $set: req.body })
         .then((update_resp) => {
             console.log(update_resp)
             res.send("class schedule has been updated successfully")

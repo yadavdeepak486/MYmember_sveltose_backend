@@ -1,13 +1,16 @@
 const mongoose = require("mongoose");
-const { ObjectId } = mongoose.Schema;
+// const { ObjectId } = mongoose.Schema;
 
-const programSchema = new mongoose.Schema(
+const schema = mongoose.Schema;
+const programSchema = new schema(
     {
+        
         programName: {
             type: String,
             trim: true,
             required: true,
-            maxlength: 32
+            maxlength: 32,
+            unique:true
         },
         color: {
             type: String,
@@ -37,7 +40,12 @@ const programSchema = new mongoose.Schema(
             required: true,
             type: String
         },userId:{
-            type:String        }
+            type:String 
+        },
+        program_category:[{
+            type: schema.Types.ObjectId,
+            ref:"pcategory"
+        }]
     },
     { timestamps: true }
 );

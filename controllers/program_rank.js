@@ -4,7 +4,7 @@ const user = require("../models/user")
 
 
 exports.create = (req, res) => {
-
+    console.log(req.boy)
     const prog = new manage_rank(req.body)
     prog.save((err, data) => {
         if (err) {
@@ -12,6 +12,7 @@ exports.create = (req, res) => {
                 error: err
             });
         };
+        
         if(req.file){
         const cloudenary = require("cloudinary").v2
         cloudenary.config({
