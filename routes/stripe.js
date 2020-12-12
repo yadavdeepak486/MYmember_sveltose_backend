@@ -14,9 +14,9 @@ var storage = multer.diskStorage({
 });
 var upload = multer({ storage: storage });
 
-router.post("/add_stripe/:user_id",isAuth,requireSignin,upload.single("stripe_image"),stripe.create);
-router.get("/list_of_stripe/:user_id",isAuth,requireSignin,stripe.read);
-router.put("/update_stripe/:user_id/:stripeId",isAuth,requireSignin,stripe.update);
-router.get("/stripe_info/:user_id/:stripeId",isAuth,requireSignin,stripe.stripe_detail)
-router.delete("/delete_stripe/:user_id/:stripeId",isAuth,requireSignin,stripe.remove);
+router.post("/add_stripe/:user_id",requireSignin,upload.single("stripe_image"),stripe.create);
+router.get("/list_of_stripe/:user_id",requireSignin,stripe.read);
+router.put("/update_stripe/:user_id/:stripeId",requireSignin,stripe.update);
+router.get("/stripe_info/:user_id/:stripeId",requireSignin,stripe.stripe_detail)
+router.delete("/delete_stripe/:user_id/:stripeId",requireSignin,stripe.remove);
 module.exports = router;

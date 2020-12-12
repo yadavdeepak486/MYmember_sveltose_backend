@@ -16,8 +16,8 @@ var upload = multer({ storage: storage });
 
 router.post("/add_program_rank/:user_id", requireSignin,upload.single("rank_image"),program.create);
 router.get("/list_of_program_rank/:user_id",requireSignin,program.read);
-router.get("/program_rank_info/:user_id/:proId",isAuth,requireSignin,program.program_Info)
-router.put("/update_program_rank/:user_id/:proId",isAuth,upload.single("rank_image"),requireSignin,program.update);
-router.delete("/delete_program_rank/:user_id/:proId",isAuth,requireSignin,program.remove);
+router.get("/program_rank_info/:user_id/:proId",requireSignin,program.program_Info)
+router.put("/update_program_rank/:user_id/:proId",upload.single("rank_image"),requireSignin,program.update);
+router.delete("/delete_program_rank/:user_id/:proId",requireSignin,program.remove);
 
 module.exports = router;

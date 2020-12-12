@@ -16,13 +16,13 @@ exports.read = (req,res)=>{
                 }
             })
 }
+
 exports.create = (req,res)=>{
     var category = req.body.category;
     var programName = req.body.programName;
     var programId = req.params.programId;
 
     var categoryDetails={}
-
     categoryDetails.category = category;
     categoryDetails.programName = programName;
     console.log(categoryDetails)
@@ -41,7 +41,7 @@ exports.create = (req,res)=>{
                 categoryObj.save((err,categoryData)=>{
                     if(err){
                         console.log(err)
-                    }
+                    }   
                     else{
                         program.findByIdAndUpdate({_id:programId},{$push:{ program_category : categoryData._id }})
                             .exec((err,data)=>{
@@ -80,7 +80,6 @@ exports.update = (req,res)=>{
                       res.send({msg:'category update successfully'})
                     }
                 })
-            
         }
     })
 }

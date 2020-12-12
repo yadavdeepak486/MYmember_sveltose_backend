@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { create } = require("../controllers/psubcategory")
+const { create,update,remove } = require("../controllers/psubcategory")
 const { requireSignin, isAuth } = require("../controllers/auth");
 
 
@@ -10,5 +10,7 @@ const parser = bodyParser.urlencoded({
 });
 
 router.post("/program_createSubcategory/:catId",requireSignin,parser,create);
+router.put("/program_updateSubcategory/:catId/:sub_catId",requireSignin,parser,update);
+router.delete("/program_deleteSubcategory/:catId/:sub_catId",requireSignin,remove);
 
 module.exports = router;
