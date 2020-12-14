@@ -12,7 +12,7 @@ exports.addmember = (req, res) => {
         if(err){
             res.send({ error: 'member is not add' })
         }
-        if(data.length > 0){
+        if(data){
         if (req.file) {
             cloudinary.config({
                 cloud_name: process.env.cloud_name,
