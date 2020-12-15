@@ -4,7 +4,7 @@ const program = require("../controllers/program")
 const { requireSignin, isAuth } = require("../controllers/auth");
 var multer = require("multer");
 
-var storage = multer.diskStorage({
+var storage = multer.diskStorage({ 
     destination: (req, file, cb) => {
         cb(null, '/home/abc/Documents/MYmember_sveltose_backend/uploads/')
     },

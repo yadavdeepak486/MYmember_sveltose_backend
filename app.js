@@ -19,7 +19,6 @@ const orderRoutes = require('./routes/order');
 
 //shivani's
 const User = require("./models/administrate_user");
-const forget = require("./routes/forget_pass")
 const programRoutes = require("./routes/program")
 const manageRankRoutes = require("./routes/program_rank")
 const stripe = require("./routes/stripe");
@@ -53,62 +52,6 @@ mongoose
     .then(() => console.log('DB Connected'));
 
 
-app.get("/reset_pass/:token",(req,res)=>{
-    app.set("token",req.params.token)
-    res.sendFile(path.join(__dirname + '/reset_pass.html'));
-});
-app.get("/add_fees",(req,res)=>{
-    res.sendFile(path.join(__dirname+'/repass.html'));
-})
-
-
-async function hashPassword(password) {
-    const salt = uuidv1()
-    if (!password) return '';
-    try {
-        return await crypto
-            .createHmac('sha1', salt)
-            .update(password)
-            .digest('hex');
-    } catch (err) {
-        return '';
-    }
-    // return await bcrypt.hash(password, uuidv1());
-};
-
-
-
-
-app.post("/reset_password",parser, async (req, res, next) => {
-    const pass = req.body.password
-    const hashedPassword = await hashPassword(pass);
-    console.log(hashedPassword,"%%%%%%%%%%%%%%%%%%%%%%%%%")
-    const token = app.get("token")
-    const confirm_pass = req.body.repassword  
-    console.log(req.body)  
-    User.findOne({ resetPasswordToken: token })
-        .then((user) => {
-            if (!user) {
-                res.json({ message: 'Password reset token is invalid or has expired.' });
-            }
-            if (pass === confirm_pass) {
-
-                var myquery = { resetPasswordToken: token};
-                var newvalues = { $set: { hashed_password: hashedPassword, resetPasswordToken: undefined, resetPasswordExpires: undefined } };
-                User.updateOne(myquery, newvalues)
-                    .then((result) => {
-                        console.log(result)
-                        res.send("password reset")
-                    }).catch((err) => {
-                        console.log(err)
-                        res.send(err);
-                    })
-            } else {
-                res.send("Your Confirm Password Is wrong")
-            }
-        })
-})
-
 // middlewares
 app.use(morgan('dev'));
 app.use(bodyParser.json());
@@ -128,7 +71,6 @@ app.use("/api",programRoutes)
 app.use("/api",manageRankRoutes);
 app.use("/api",stripe);
 app.use("/api",adminstrate);
-app.use("/api",forget);
 app.use('/api',todo_api)
 app.use('/api',goals_api)
 app.use("/api",class_schedule);
