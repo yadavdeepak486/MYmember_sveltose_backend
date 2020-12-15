@@ -1,7 +1,6 @@
 const pcategory = require("../models/pcategory");
 const program = require("../models/program");
 
-
 exports.read = (req,res)=>{
     var categoryId = req.params.categoryId;
     pcategory.findById(categoryId)
@@ -70,19 +69,31 @@ exports.update = (req,res)=>{
             res.send({error:'category not find'})
         }
         else{
-                program.findByIdAndUpdate({_id:programID},{$set:{ program_category : data._id }})
-                .exec((err,data)=>{
-                    if(err){
-                        console.log(err)
-                        res.send({error:'category is not update'})
-                    }
-                    else{
-                      res.send({msg:'category update successfully'})
-                    }
-                })
+            res.send({ result: 'category is  update successfully' })
         }
     })
 }
+
+exports.remove = (req,res)=>{
+    var categoryId = req.params.categoryId;
+          pcategory.findOneAndRemove({_id:categoryId},(err,data)=>{
+                if(err){
+                    res.send({error:'category is not delete'})
+                }
+                else{
+                  program.update({"program_category":categoryId},{$pull:{"program_category":categoryId}},
+                    function(err,data){
+                        if(err){
+                            res.send({error:'category is not delete from program'})
+                        }
+                        else{
+                            res.send({error:'category is delete from program'})
+                        }
+                    })
+                             
+                }
+            })
+    }   
 
 
 

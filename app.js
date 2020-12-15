@@ -37,6 +37,7 @@ const add_member = require("./routes/addmember")
 const test_fees = require("./routes/test_fees")
 const pcategory = require("./routes/pcategory")
 const psubcategory = require("./routes/psubcategory")
+const add_membership = require("./routes/membership")
 const app = express();
 const parser = bodyParser.urlencoded({
     extended: false
@@ -141,6 +142,7 @@ app.use("/api",add_member)
 app.use("/api",test_fees)
 app.use("/api",pcategory)
 app.use("/api",psubcategory)
+app.use('/api', add_membership)
 
 const port = process.env.PORT || 8000;
 app.listen(port, () => {

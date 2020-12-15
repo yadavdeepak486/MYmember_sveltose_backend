@@ -10,7 +10,7 @@ const parser = bodyParser.urlencoded({
 });
 
 router.post("/program_createSubcategory/:catId",requireSignin,parser,create);
-router.put("/program_updateSubcategory/:catId/:sub_catId",requireSignin,parser,update);
-router.delete("/program_deleteSubcategory/:catId/:sub_catId",requireSignin,remove);
+router.put("/program_updateSubcategory/:sub_catId",requireSignin,parser,update);
+router.delete("/program_deleteSubcategory/:sub_catId",requireSignin,remove);
 
 module.exports = router;

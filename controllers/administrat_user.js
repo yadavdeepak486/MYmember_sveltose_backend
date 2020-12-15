@@ -162,3 +162,82 @@ exports.requireSignin = expressJwt({
 //     next();
 // };
 
+exports.read =(req,res)=>{
+    administrate.find().exec((err,data)=>{
+          if(err){
+              res.send({error:'user list not found'})
+          }
+          else{
+              if(data.length>0){
+                  res.send(data)
+              }
+              else{
+                  res.send({msg:'user list is empty'})
+              }
+          }
+      })
+  }
+  
+  exports.remove=(req,res)=>{
+      var userId = req.params.userId
+      administrate.findByIdAndRemove(userId,(err,data)=>{
+          if(err){
+              res.send({error:'user is not remove'})
+          }
+          else{
+              res.send({msg:'user is remove'})
+          }
+      })
+    }
+  
+    exports.edit_userInfo = (req,res)=>{
+        var userid = req.params.userId;
+        administrate.findById(userid).exec((err,userData)=>{
+              if(err){
+                  res.send({error:'user data is not found'})
+              }
+              else{
+                  res.send(userData)
+              }
+        })
+    }
+  
+    exports.update =(req,res)=>{
+          var userid = req.params.userId;
+          administrate.updateOne({_id:userid},req.body)
+                  .then((result)=>{
+                        if(req.file){
+                              const cloudenary = require("cloudinary").v2
+                              cloudenary.config({
+                              cloud_name: process.env.cloud_name,
+                              api_key: process.env.cloud_api_key,
+                              api_secret: process.env.cloud_api_secret
+                              });
+                              const path = req.file.path
+                              const uniqueFilename = new Date().toISOString()
+                              cloudenary.uploader.upload(
+                                  path,
+                                  { public_id: `users/${uniqueFilename}`, tags: `user` }, // directory and tags are optional
+                                  function (err, image) {
+                                      if (err) return res.send(err)
+                                      console.log('file uploaded to Cloudinary')
+                                      const fs = require('fs')
+                                      fs.unlinkSync(path)
+                                      administrate.findByIdAndUpdate(userid, { $set: { profile_image: image.url } })
+                                          .then((response) => {
+                                              res.send({msg:'user is update with profile successfully'})
+                                          });
+                                  }
+                              );  
+                          }
+                          else {
+                              res.send({msg:'user is update successfully'});
+                              console.log(result);
+                          }
+                      }).catch((err) => {
+                          console.log(err);
+                          res.send(err);
+              });
+    }
+  
+  

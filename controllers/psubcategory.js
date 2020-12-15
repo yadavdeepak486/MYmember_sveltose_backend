@@ -4,7 +4,6 @@ const { deleteOne, $where } = require("../models/psubcategory");
 
 exports.create = (req, res) => {
     console.log(req.body)
-
     var categoryId = req.params.catId;
     var category = req.body.category;
     var subcategoryDetails = category.subcatdetails;
@@ -50,42 +49,30 @@ exports.update = (req, res) => {
                 res.send({ error: 'subcategory is not update' })
             }
             else {
-                pcategory.findById({ _id: categoryId }).exec((err, data) => {
-                    if (err) {
-                        console.log(err)
-                        res.send({ error: 'subcategory is not update from category' })
-                    }
-                    else {
-                        console.log(data)
-                        data.program_subcategory.set(subcategorydata._id)
-                        res.send({ msg: 'subcategory update successfully' })
-                    }
-                })
+                res.send({ result: 'subcategory is  update successfully' })
             }
      })
 }
 
 exports.remove = (req,res)=>{
-    console.log('run')
     var categoryId = req.params.catId;
     var subcategoryId = req.params.sub_catId;
-    // psubcategory.findByIdAndDelete(subcategoryId,(err,deleteData)=>{
-    //     if(err){
-    //         res.send({error:'subcategory is not delete'})
-    //     }
-    //     else{
-            pcategory.findById(categoryId)
-                     .populate({
-                         path:'program_subcategory',
-                         match:{ _id: subcategoryId }
-                     })
-                     .exec((err,data)=>{
-                         if(err){
-                             console.log(err)
-                         }
-                         console.log(data)
-                         res.send(data)
-                      })   
-    //     }
-    // })
+
+            psubcategory.findOneAndRemove({_id:subcategoryId},(err,data)=>{
+                if(err){
+                    res.send({error:'subcategory is not delete'})
+                }
+                else{
+                  pcategory.update({"program_subcategory":subcategoryId},{$pull:{"program_subcategory":subcategoryId}},
+                    function(err,data){
+                        if(err){
+                            res.send({error:'subcategory is not delete from category'})
+                        }
+                        else{
+                            res.send({error:'subcategory is delete from category'})
+                        }
+                    })
+                             
+                }
+            })
 }
