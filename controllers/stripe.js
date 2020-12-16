@@ -1,8 +1,7 @@
 const { env } = require("process");
 const stripe = require("../models/stripe");
 // var s = require("../uploads")
-
-
+const cloudenary = require("cloudinary").v2
 
 exports.create = (req, res) => {
     const prog = new stripe(req.body)
@@ -11,33 +10,41 @@ exports.create = (req, res) => {
             return res.status(400).json({
                 error: err
             });
-        };
+        }
+        else{
         if(req.file){
-        const cloudenary = require("cloudinary").v2
         cloudenary.config({
             cloud_name: process.env.cloud_name,
             api_key: process.env.cloud_api_key,
             api_secret: process.env.cloud_api_secret
         });
         console.log(req.file)
-        const path = req.file.path
-        const uniqueFilename = new Date().toISOString()
+
+        var filename = req.file.originalname;
+        var path = req.file.path;
+
+        var uniquefilename = filename+(Date.now())
+        console.log(uniquefilename)
+        
         cloudenary.uploader.upload(
             path,
-            { public_id: `blog/${uniqueFilename}`, tags: `blog` }, // directory and tags are optional
+            { public_id: `blog/${uniquefilename}`, tags: `blog` }, // directory and tags are optional
             function (err, image) {
+                console.log(image)
                 if (err) return res.send(err)
                 console.log('file uploaded to Cloudinary')
                 const fs = require('fs')
                 fs.unlinkSync(path)
-                stripe.findByIdAndUpdate(data._id, { $set: { stripe_image: image.url } })
+                stripe.findByIdAndUpdate(data._id, { $set: { 'stripe_image': image.url } })
                     .then((response) => {
                         res.send("stripe details added and image")
                     });
-            }
-        );
-        }else{
-            res.send("stripe details added")
+                }
+            );
+        }
+             else{
+                res.send("stripe details added")
+          }
         }
     });
 };
@@ -56,6 +63,7 @@ exports.read = (req, res) => {
 
 exports.update = (req, res) => {
     const uid = req.params.stripeId;
+
     stripe.updateOne({ _id: uid }, req.body)
         .then((result) => {
             if (req.file) {
@@ -116,18 +124,3 @@ exports.remove = (req, res) => {
 
 
 
-//image kid id
-//21tx44do9br
-//cloudeny API ky 914449541412924
-// API SECRET - ZEHWWVyB7gf4Gj5FPuWPucmAtZU
-// envoronmnt variable - CLOUDINARY_URL=cloudinary://914449541412924:ZEHWWVyB7gf4Gj5FPuWPucmAtZU@sveltose-com
-// cloud name -sveltose-com
-
-
-
-//image kid id
-//21tx44do9br
-//cloudeny API ky 914449541412924
-// API SECRET - ZEHWWVyB7gf4Gj5FPuWPucmAtZU
-// envoronmnt variable - CLOUDINARY_URL=cloudinary://914449541412924:ZEHWWVyB7gf4Gj5FPuWPucmAtZU@sveltose-com
-// cloud name -sveltose-com

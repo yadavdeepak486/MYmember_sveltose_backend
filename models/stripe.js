@@ -18,7 +18,7 @@ const stripeSchema = new mongoose.Schema(
             required:true
         },
         total_stripe: {
-            type: Number,
+            type: String,
             required: true
         },
         progression: {
@@ -35,7 +35,7 @@ const stripeSchema = new mongoose.Schema(
         },
         age_requirement: {
             required: true,
-            type: Number
+            type: String
         }
     },
     { timestamps: true }

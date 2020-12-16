@@ -3,7 +3,6 @@ const cloudinary = require("cloudinary").v2
 
 exports.create = (req,res)=>{
     console.log(req.body)
-
     var membershipDetails = req.body
     var membershipObj = new membershipModal(membershipDetails);
     membershipObj.save((err,data)=>{
@@ -49,7 +48,24 @@ exports.read =(req,res)=>{
                 res.send({error:'membership list is not find'});
             }
             else{
-                res.send(data);    
+                if(data.length>0){
+                    res.send(data);    
+                }
+                else{
+                    res.send({msg:'membership list is empty'})
+                }
             }
      })
+}
+
+exports.membershipInfo =(req,res)=>{
+    var membershipId = req.params.membershipId;
+    membershipModal.findById(membershipId).exec((err,data)=>{
+        if(err){
+            res.send({error:'membership data not found'});
+        }
+        else{
+            res.send(data);
+        }
+    })
 }
