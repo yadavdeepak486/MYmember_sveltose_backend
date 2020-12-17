@@ -8,43 +8,43 @@ const userSchema = new mongoose.Schema(
             type: String,
             trim: true,
             required: true,
-            maxlength: 32
+            maxlength: 100
         },
         lastname: {
             type: String,
             trim: true,
             required: true,
-            maxlength: 32
+            maxlength: 100
         },
         bussinessname: {
             type: String,
             trim: true,
             required: true,
-            maxlength: 32
+            maxlength: 100
         },
         bussinessAddress: {
             type: String,
             trim: true,
             required: true,
-            maxlength: 32
+            maxlength: 100
         },
         phone: {
             type: String,
             trim: true,
             required: true,
-            maxlength: 32
+            maxlength: 100
         },
         industry:{
             type: String,
             trim: true,
             required: true,
-            maxlength: 32
+            maxlength: 100
         },
         username:{
             type: String,
             trim: true,
             required: true,
-            maxlength: 32
+            maxlength: 100
         },
 
         email: {
