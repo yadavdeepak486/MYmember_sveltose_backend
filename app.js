@@ -42,6 +42,7 @@ const psubcategory = require("./routes/psubcategory")
 const add_membership = require("./routes/membership")
 const finance_info = require("./routes/finance_info")
 const document = require("./routes/document")
+const bymember_ship = require("./routes/buy_membership")
 
 const app = express();
 app.use(express.json());
@@ -156,7 +157,7 @@ app.use("/api",psubcategory)
 app.use('/api', add_membership)
 app.use('/api', finance_info)
 app.use('/api', document);
-
+app.use('/api', bymember_ship);
 const port = process.env.PORT || 8000;
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);

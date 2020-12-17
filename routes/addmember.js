@@ -11,6 +11,7 @@ const { requireSignin } = require('../controllers/auth');
 const upload = require('../handler/multer');
 
 router.get('/member/member_list/:userID',requireSignin,read)
+
 router.get('/member/member_info/:userID/:memberID',requireSignin,memberinfo)
 router.post('/member/add_member/:userID',requireSignin,upload.single('memberprofileImage'),addmember) 
 router.delete('/member/delete_member/:userID/:memberID',requireSignin,deletemember)

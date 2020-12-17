@@ -5,12 +5,7 @@ const { requireSignin, isAuth } = require("../controllers/auth");
 
 const upload = require('../handler/multer')
 
-router.get("/add_stripe",(req,res)=>{
-    res.render('document')
-})
-
 router.post("/add_stripe",requireSignin,upload.single('stripe_image'),stripe.create);
-
 router.get("/list_of_stripe/:user_id",requireSignin,stripe.read);
 router.put("/update_stripe/:user_id/:stripeId",requireSignin,stripe.update);
 router.get("/stripe_info/:user_id/:stripeId",requireSignin,stripe.stripe_detail)

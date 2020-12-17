@@ -18,11 +18,14 @@ exports.create = (req, res) => {
             api_key: process.env.cloud_api_key,
             api_secret: process.env.cloud_api_secret
         });
-        const path = req.file.path
-        const uniqueFilename = new Date().toISOString()
+
+        var filename = req.file.originalname;
+        var path = req.file.path;
+        var uniquefilename = filename+(Date.now())
+
         cloudenary.uploader.upload(
             path,
-            { public_id: `blog/${uniqueFilename}`, tags: `blog` }, // directory and tags are optional
+            { public_id: `program/${uniquefilename}`, tags: `program` }, // directory and tags are optional
             function (err, image) {
                 if (err) return res.send(err)
                 console.log('file uploaded to Cloudinary')
@@ -79,11 +82,13 @@ exports.update = (req, res) => {
                     api_key: process.env.cloud_api_key,
                     api_secret: process.env.cloud_api_secret
                 });
-                const path = req.file.path
-                const uniqueFilename = new Date().toISOString()
+                var filename = req.file.originalname;
+                var path = req.file.path;
+                var uniquefilename = filename+(Date.now())
+                
                 cloudenary.uploader.upload(
                     path,
-                    { public_id: `blog/${uniqueFilename}`, tags: `blog` }, // directory and tags are optional
+                    { public_id: `program/${uniquefilename}`, tags: `program` }, // directory and tags are optional
                     function (err, image) {
                         if (err) return res.send(err)
                         console.log('file uploaded to Cloudinary')

@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
-
-const addmemberSchema = new mongoose.Schema(
+const schema = mongoose.Schema
+const addmemberSchema = new schema(
     {
         studentType:{
             type:String,
@@ -86,7 +86,13 @@ const addmemberSchema = new mongoose.Schema(
         },
         memberprofileImage:{
             type:String
-        }
+        },
+        membership_details:[
+            {
+                type:schema.Types.ObjectId,
+                ref:'Buy_Membership'
+            }
+        ]
     }
 
 );

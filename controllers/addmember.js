@@ -49,7 +49,9 @@ exports.addmember = (req, res) => {
 }
 
 exports.read = (req, res) => {
-    addmemberModal.find().exec((err, data) => {
+    addmemberModal.find()
+                  .populate('membership_details')  
+                  .exec((err, data) => {
         if (err) {
             res.send({ error: 'member list is not found' })
         }

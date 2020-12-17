@@ -57,6 +57,8 @@ const membershipSchema = new mongoose.Schema({
     membership_profile:{
         type:String,
     }
-})
+},
+{ timestamps: true }
+)
 
 module.exports = mongoose.model('membership',membershipSchema)
