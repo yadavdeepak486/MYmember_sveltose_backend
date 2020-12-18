@@ -1,8 +1,11 @@
 const finance_info = require("../models/finance_info");
+const addmemberModal = require('../models/addmember');
 const { errorHandler } = require('../helpers/dbErrorHandler');
 
-exports.Create = async (req, res) => {
+exports.Create = async (req, res) =>{
+    const studentId = req.params.studentId
     const body_info = req.body
+    console.log(req.body)
     const finance = new finance_info(body_info);
     finance.save((err, data) => {
         console.log(err)
@@ -11,8 +14,18 @@ exports.Create = async (req, res) => {
                 error: errorHandler(err)
             });
         }
-        console.log(data)
-        res.send("finance Info has been added successfully");
+        else{
+            console.log(data)
+            addmemberModal.findByIdAndUpdate({_id:studentId},{$push:{ finance_details: data._id }})
+            .exec((err,data)=>{
+                 if(err){
+                     res.send({error:'finance info is not add in student'})
+                }
+                 else{
+                    res.send({msg:'finance info is add in student'})
+                }   
+            })
+        }
     });
 };
 
@@ -24,7 +37,8 @@ exports.read = async (req, res) => {
             res.send(err)
         })
 };
-exports.finance_Info = async (req, res) => {
+
+exports.finance_Info = (req, res) => {
     const id = req.params.financeId
     finance_info.findById(id)
         .then((result) => {
@@ -34,7 +48,8 @@ exports.finance_Info = async (req, res) => {
         })
 };
 
-exports.update = async (req, res) => {
+
+exports.update = (req, res) => {
     const id = req.params.financeId;
     finance_info.updateOne({ _id: id }, { $set: req.body })
         .then((update_resp) => {
@@ -46,13 +61,19 @@ exports.update = async (req, res) => {
         });
 };
 
-exports.remove = async (req, res) => {
+exports.remove = (req, res) => {
   const id = req.params.financeId;
-  
   finance_info.deleteOne({ _id: id })
         .then((resp) => {
-            console.log(resp)
-            res.json("finance Info has been deleted for this student successfully")
+        addmemberModal.update({"finance_details":id},{$pull:{"finance_details":id}},
+        function(err,data){
+             if(err){
+                 res.send({error:'finance info is not delete in student'})
+            }
+             else{
+                res.send({msg:'finance info is delete in student'})
+            }
+        })  
         }).catch((err) => {
             console.log(err)
             res.send(err)

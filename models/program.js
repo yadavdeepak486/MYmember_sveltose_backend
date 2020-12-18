@@ -4,7 +4,6 @@ const mongoose = require("mongoose");
 const schema = mongoose.Schema;
 const programSchema = new schema(
     {
-        
         programName: {
             type: String,
             trim: true,
@@ -21,7 +20,7 @@ const programSchema = new schema(
             required:true
         },
         total_rank: {
-            type: Number,
+            type: String,
             required: true
         },
         progression: {
@@ -33,18 +32,22 @@ const programSchema = new schema(
             required:true
         },
         program_image: {
-            // data: Buffer,
             type: String
         },
         requirement: {
             required: true,
             type: String
-        },userId:{
+        },
+        userId:{
             type:String 
         },
         program_category:[{
             type: schema.Types.ObjectId,
             ref:"pcategory"
+        }],
+        program_rank:[{
+            type:schema.Types.ObjectId,
+            ref:"Program_rank"
         }]
     },
     { timestamps: true }

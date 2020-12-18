@@ -20,7 +20,6 @@ exports.addmember = (req, res) => {
                 api_key: process.env.cloud_api_key,
                 api_secret: process.env.cloud_api_secret
             });
-            
             var path = req.file.path;
             var filename = req.file.originalname;
             var uniqueFilename = filename+(Date.now())
@@ -67,12 +66,12 @@ exports.read = (req, res) => {
     })
 
 }
-
-exports.memberinfo = (req, res) => {
-    console.log('id', req.params)
-    var memberID = req.params.memberID;
-    console.log(memberID)
-    addmemberModal.findById(memberID).exec((err, data) => {
+exports.studentinfo = (req, res) => {
+    var studentinfo = req.params.StudentId;
+    addmemberModal.findById(studentinfo)
+    .populate('membership_details') 
+    .populate('finance_details') 
+    .exec((err, data) => {
         if (err) {
             res.send({ error: 'member is not found' })
         }

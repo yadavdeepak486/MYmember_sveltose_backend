@@ -24,49 +24,60 @@ const { errorHandler } = require('../helpers/dbErrorHandler');
 //             res.send(err)
 //         })
 // };
-// exports.membership_Info = async (req, res) => {
-//     const id = req.params.membershipId
-//     buy_membership.findById(id)
-//         .then((result) => {
-//             res.json(result)
-//         }).catch((err) => {
-//             res.send(err)
-//         })
-// };
-// exports.update = async (req, res) => {
-//     const id = req.params.membershipId;
-//     buy_membership.updateOne({ _id: id }, { $set: req.body })
-//         .then((update_resp) => {
-//             console.log(update_resp)
-//             res.send("membership Info  has been updated for this student successfully")
-//         }).catch((err) => {
-//             console.log(err)
-//             res.send(err)
-//         })
-// };
 
-// exports.remove = async (req, res) => {
-//     const id = req.params.membershipId
-//     buy_membership.deleteOne({ _id: id })
-//         .then((resp) => {
-//             console.log(resp)
-//             res.json("membership Info has been deleted for this student successfully")
-//         }).catch((err) => {
-//             console.log(err)
-//             res.send(err)
-//         })
-// };
+exports.membership_Info = (req, res) => {
+    const id = req.params.membershipId
+    buy_membership.findById(id)
+        .then((result) => {
+            res.json(result)
+        }).catch((err) => {
+            res.send(err)
+        })
+};
+
+exports.update = (req, res) => {
+    const id = req.params.membershipId;
+    console.log(id,req.body)
+    buyMembership.updateOne({ _id: id },{ $set: req.body })
+        .then((update_resp) => {
+            console.log(update_resp)
+            res.send("membership Info  has been updated for this student successfully")
+        }).catch((err) => {
+            console.log(err)
+            res.send(err)
+        })
+};
+
+exports.remove = (req, res) => {
+    const id = req.params.membershipId
+    buyMembership.deleteOne({ _id: id })
+        .then((resp) => {
+            addmemberModal.update({"membership_details": id},{$pull:{"membership_details":id}}
+            ,function(err,data){
+                if(err){
+                    res.send({error:"mebership is not delete in student"});
+                }
+                else{
+                    res.send({msg:"mebership is delete in student"});
+                }
+            })
+        }).catch((err) => {
+            console.log(err)
+            res.send(err)
+    })
+};
 
 
 exports.create = (req,res)=>{
     var studentId = req.params.studentId;
     
-    console.log(req.body)
         if(req.body.ptype == 'cash' || req.body.ptype == 'check'){
-           var Membership = new buyMembership(req.body);
-           Membership.save((err,data)=>{
+           var membership = new buyMembership(req.body);
+           console.log(membership)
+           membership.save((err,data)=>{
                 if(err){
                     res.send({error:'membership not buy'})
+                    console.log(err)
                 }
                 else{
                     addmemberModal.findByIdAndUpdate({_id:studentId},{$push:{membership_details: data._id}})    

@@ -92,9 +92,14 @@ const addmemberSchema = new schema(
                 type:schema.Types.ObjectId,
                 ref:'Buy_Membership'
             }
+        ],
+        finance_details:[
+            {
+                type:schema.Types.ObjectId,
+                ref:'FinanceInfo'
+            }
         ]
     }
-
 );
 
 module.exports = mongoose.model("member", addmemberSchema);

@@ -1,15 +1,14 @@
 const program = require("../models/program");
 
-// var s = require("../uploads")
-
-
 exports.create = (req, res) => {
-    const prog = new program(req.body)
+    console.log(req.body,req.file)
+    var prog = new program(req.body)
+    
     prog.save((err, data) => {
+        console.log(data)
         if (err) {
-            return res.status(400).json({
-                error: errorHandler(err)
-            });
+           res.send({error:'program is not create'})
+           console.log(err)
         }
         if(req.file){
         const cloudenary = require("cloudinary").v2
@@ -59,6 +58,7 @@ exports.programs_detail = (req, res) => {
     console.log(id)
     program.findById(id)
    .populate('program_category')
+   .populate('program_rank')
    .exec((err,data)=>{
                 if(err){
                     console.log(err)
@@ -66,9 +66,8 @@ exports.programs_detail = (req, res) => {
                 }
                 else{
                     res.send(data)
-                }
-            })
-      
+            }
+        })
 };
 
 exports.update = (req, res) => {

@@ -13,7 +13,6 @@ const Finance_infoSchema = new mongoose.Schema(
         },
         notes: {
             type: String,
-            required: true
         },
         default: {
             type: Number,
@@ -22,36 +21,44 @@ const Finance_infoSchema = new mongoose.Schema(
         status: {
             type: String,
             required: true
-        }, credit_Card_type: {
+        }, 
+        credit_Card_type: {
             type: String,
             required: true
         },
         credit_Card_Number: {
-            type: Number,
+            type: String,
             required: true
-        }, credit_cvv: {
-            type: Number,
+        },
+         credit_cvv:{
+            type: String,
             required: true
         },
         expiry_month: {
             type: String,
             required: true
-        }, expiry_year: {
+        },
+         expiry_year: {
             type: Number,
             required: true
-        }, billing_address: {
-            type: String,
-        required: true
-        }, country: {
+        }, 
+        billing_address: {
             type: String,
             required: true
-        }, state: {
+        },
+         country: {
             type: String,
             required: true
-        }, city: {
+        }, 
+        state: {
             type: String,
             required: true
-        }, zip_postal: { type: Number, required: true }
+        },
+         city: {
+            type: String,
+            required: true
+        },
+         zip_postal: { type: String, required: true }
     },
     { timestamps: true }
 );
