@@ -93,6 +93,7 @@ exports.update = (req, res) => {
                         console.log('file uploaded to Cloudinary')
                         const fs = require('fs')
                         fs.unlinkSync(path)
+                        
                         program.findByIdAndUpdate(uid, { $set: { program_image: image.url } })
                             .then((response) => {
                                 res.json(response)

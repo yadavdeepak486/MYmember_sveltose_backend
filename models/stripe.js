@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
-const { ObjectId } = mongoose.Schema;
-
-const stripeSchema = new mongoose.Schema(
+const schema = mongoose.Schema                    
+const stripeSchema = new schema(
     {
         stripeName: {
             type: String,
@@ -30,13 +29,19 @@ const stripeSchema = new mongoose.Schema(
             required:true
         },
         stripe_image: {
-            // data: Buffer,
-            type: String
+         // data: Buffer,
+         type: String
         },
         age_requirement: {
             required: true,
             type: String
+        },
+        manage_stripe:[
+        {
+            type: schema.Types.ObjectId,
+            ref:'manageStripe'           
         }
+     ]
     },
     { timestamps: true }
 );

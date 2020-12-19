@@ -51,8 +51,14 @@ exports.create = (req, res) => {
 exports.read = (req, res) => {
     // const uid = req.body.uid;
     stripe.find()
-        .then((category) => {
-            res.json(category)
+          .populate('manage_stripe')  
+          .then((stripe) => {
+            if(stripe.length>0){
+                res.send(stripe)
+            }
+            else{
+                res.send({msg:'stripe is empty'})
+            }
         }).catch((err) => {
             console.log(err);
             res.send(err)
@@ -61,7 +67,7 @@ exports.read = (req, res) => {
 
 exports.update = (req, res) => {
     const uid = req.params.stripeId;
-
+    console.log(req.body)
     stripe.updateOne({ _id: uid }, req.body)
         .then((result) => {
             if (req.file) {
@@ -86,13 +92,13 @@ exports.update = (req, res) => {
                         fs.unlinkSync(path)
                         stripe.findByIdAndUpdate(uid, { $set: { stripe_image: image.url } })
                             .then((response) => {
-                                res.json(response)
+                                res.send({msg:'stripe is update with image'})
                             });
                     }
                 );
             } else {
-                res.send(result);
-                console.log(result);
+                res.send({msg:'stripe is update'})
+                
             }
             // console.log(result);
         }).catch((err) => {
@@ -103,6 +109,7 @@ exports.update = (req, res) => {
 exports.stripe_detail = async (req, res) => {
     const id = req.params.stripeId
     stripe.findById(id)
+        .populate('manage_stripe')  
         .then((result) => {
             res.json(result)
         }).catch((err) => {

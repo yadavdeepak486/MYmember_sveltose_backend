@@ -25,6 +25,7 @@ const forget = require("./routes/forget_pass")
 const programRoutes = require("./routes/program")
 const manageRankRoutes = require("./routes/program_rank")
 const stripe = require("./routes/stripe");
+const manage_stripe = require("./routes/manage_strip")
 const todo_api = require("./routes/todo_apis")
 const adminstrate = require("./routes/administrater_user")
 const goals_api = require("./routes/goals_api");
@@ -158,6 +159,8 @@ app.use('/api', add_membership)
 app.use('/api', finance_info)
 app.use('/api', document);
 app.use('/api', bymember_ship);
+app.use('/api',manage_stripe)
+
 const port = process.env.PORT || 8000;
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
