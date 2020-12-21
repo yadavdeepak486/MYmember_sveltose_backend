@@ -1,15 +1,14 @@
 const program = require("../models/program");
 
-// var s = require("../uploads")
-
-
 exports.create = (req, res) => {
-    const prog = new program(req.body)
+    console.log(req.body,req.file)
+    var prog = new program(req.body)
+    
     prog.save((err, data) => {
+        console.log(data)
         if (err) {
-            return res.status(400).json({
-                error: errorHandler(err)
-            });
+           res.send({error:'program is not create'})
+           console.log(err)
         }
         if(req.file){
         const cloudenary = require("cloudinary").v2
@@ -18,11 +17,14 @@ exports.create = (req, res) => {
             api_key: process.env.cloud_api_key,
             api_secret: process.env.cloud_api_secret
         });
-        const path = req.file.path
-        const uniqueFilename = new Date().toISOString()
+
+        var filename = req.file.originalname;
+        var path = req.file.path;
+        var uniquefilename = filename+(Date.now())
+
         cloudenary.uploader.upload(
             path,
-            { public_id: `blog/${uniqueFilename}`, tags: `blog` }, // directory and tags are optional
+            { public_id: `program/${uniquefilename}`, tags: `program` }, // directory and tags are optional
             function (err, image) {
                 if (err) return res.send(err)
                 console.log('file uploaded to Cloudinary')
@@ -56,6 +58,7 @@ exports.programs_detail = (req, res) => {
     console.log(id)
     program.findById(id)
    .populate('program_category')
+   .populate('program_rank')
    .exec((err,data)=>{
                 if(err){
                     console.log(err)
@@ -63,9 +66,8 @@ exports.programs_detail = (req, res) => {
                 }
                 else{
                     res.send(data)
-                }
-            })
-      
+            }
+        })
 };
 
 exports.update = (req, res) => {
@@ -79,11 +81,13 @@ exports.update = (req, res) => {
                     api_key: process.env.cloud_api_key,
                     api_secret: process.env.cloud_api_secret
                 });
-                const path = req.file.path
-                const uniqueFilename = new Date().toISOString()
+                var filename = req.file.originalname;
+                var path = req.file.path;
+                var uniquefilename = filename+(Date.now())
+                
                 cloudenary.uploader.upload(
                     path,
-                    { public_id: `blog/${uniqueFilename}`, tags: `blog` }, // directory and tags are optional
+                    { public_id: `program/${uniquefilename}`, tags: `program` }, // directory and tags are optional
                     function (err, image) {
                         if (err) return res.send(err)
                         console.log('file uploaded to Cloudinary')

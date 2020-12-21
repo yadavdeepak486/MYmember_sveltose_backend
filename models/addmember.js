@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
-
-const addmemberSchema = new mongoose.Schema(
+const schema = mongoose.Schema
+const addmemberSchema = new schema(
     {
         studentType:{
             type:String,
@@ -58,23 +58,15 @@ const addmemberSchema = new mongoose.Schema(
             type:String
         },
         program:{
-            type:String        },
-        startDate:{
-            type:String,
+            type:String    
         },
-        expiredDate:{
-            type:String,
+        category:{
+            type:String    
         },
-        lastPromotion:{
-            type:String
+        subcategory:{
+            type:String    
         },
         location:{
-            type:String
-        },
-        ID:{
-            type:String
-        },
-        dan:{
             type:String
         },
         customId:{
@@ -84,24 +76,30 @@ const addmemberSchema = new mongoose.Schema(
             type:String
         },
         staff:{
-            type:String        },
+            type:String   
+        },
         intrested:{
             type:String,
         },
         school:{
             type:String,
         },
-        addToGroup:{
-            type:String
-        },
-        familyName:{
-            type:String
-        },
         memberprofileImage:{
             type:String
-        }
+        },
+        membership_details:[
+            {
+                type:schema.Types.ObjectId,
+                ref:'Buy_Membership'
+            }
+        ],
+        finance_details:[
+            {
+                type:schema.Types.ObjectId,
+                ref:'FinanceInfo'
+            }
+        ]
     }
-
 );
 
 module.exports = mongoose.model("member", addmemberSchema);

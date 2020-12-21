@@ -27,8 +27,7 @@ const programSchema = new mongoose.Schema(
             required:true
         },
         rank_image: {
-            //data: Buffer,
-            type: String
+            type: String,
         }
     },
     { timestamps: true }

@@ -1,4 +1,5 @@
 const express = require('express');
+const ejs = require('ejs')
 const mongoose = require('mongoose');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
@@ -6,6 +7,7 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const path = require("path");
 const crypto = require("crypto")
+const fileUpload = require('express-fileupload');
 const expressValidator = require('express-validator');
 require('dotenv').config();
 
@@ -37,10 +39,16 @@ const test_fees = require("./routes/test_fees")
 const pcategory = require("./routes/pcategory")
 const psubcategory = require("./routes/psubcategory")
 const add_membership = require("./routes/membership")
+const finance_info = require("./routes/finance_info")
+const document = require("./routes/document")
+const bymember_ship = require("./routes/buy_membership")
+
 const app = express();
-const parser = bodyParser.urlencoded({
-    extended: false
-});
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
+
 const uuidv1 = require('uuid/v1');
 uuidv1()
 // db
@@ -54,13 +62,10 @@ mongoose
 
 // middlewares
 app.use(morgan('dev'));
-app.use(bodyParser.json());
+
 app.use(cookieParser());
 app.use(expressValidator());
 app.use(cors());
-
-// routes middleware
-
 app.use('/api', authRoutes);
 app.use('/api', userRoutes);
 app.use('/api', categoryRoutes);
@@ -85,7 +90,9 @@ app.use("/api",test_fees)
 app.use("/api",pcategory)
 app.use("/api",psubcategory)
 app.use('/api', add_membership)
-
+app.use('/api', finance_info)
+app.use('/api', document);
+app.use('/api', bymember_ship);
 const port = process.env.PORT || 8000;
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);

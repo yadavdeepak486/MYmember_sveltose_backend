@@ -4,7 +4,7 @@ const { ObjectId } = mongoose.Schema;
 
 const Membershipschema = new mongoose.Schema(
     {
-        user_id: {
+        membership_name: {
             type: String,
             required: true
         },
@@ -12,48 +12,73 @@ const Membershipschema = new mongoose.Schema(
             type: String,
             required: true
         },
-        membership_duration: {
-            type: String,
+        membership_duration:{
+            type: Number,
             required: true
         },
-        expiry_date: {
+        expiry_date:{
             type: String,
             required: true
         },
         register_fees: {
             type: Number,
             required: true
-        }, totalp: {
+        },
+        totalp: {
             type: Number,
             required: true
         },
         dpayment: {
             type: Number,
             required: true
-        }, ptype: {
-            type: Number,
+        },
+        ptype: {
+            type: String,
             required: true
         },
         balance: {
             type: Number,
             required: true
-        }, payment: {
+        },
+        payment_time: {
+            type: Number,
+            required: true
+        },
+        payment_type: {
             type: String,
             required: true
-        },membership_type:{
-            type:String,
-            required:true
-        },payment_money:{
+        },
+        payment_money:{
             type:Number,
             required:true
-        },due_every:{
+        },
+        due_every:{
             type:Number,
             required:true
-        },due_every_month:{
+        },
+        due_every_month:{
             type:String,
             required:true
-        },pay_inout:{type:Number,required:true},
-        pay_latter:{type:String,required:true}
+        },
+        pay_inout:{type:String,required:true},
+
+        pay_latter:{type:String,required:true},
+
+        check_number:{
+            type:String,
+        },
+        card_number:{
+            type:String
+        },
+        card_holder_name:{
+            type:String
+        },
+        cvv_number:{
+            type:String
+        },
+        expiry_date:{
+            type:String
+        },
     },
     { timestamps: true }
 );
