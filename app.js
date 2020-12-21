@@ -44,16 +44,10 @@ const add_membership = require("./routes/membership")
 const finance_info = require("./routes/finance_info")
 const document = require("./routes/document")
 const bymember_ship = require("./routes/buy_membership")
+const candidates = require("./routes/candidate")
 
 const app = express();
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-
 // app.use(fileUpload({ safeFileNames: true, preserveExtension: true }))
-
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
-
 const uuidv1 = require('uuid/v1');
 uuidv1()
 // db
@@ -68,10 +62,10 @@ app.get("/reset_pass/:token",(req,res)=>{
     app.set("token",req.params.token)
     res.sendFile(path.join(__dirname + '/reset_pass.html'));
 });
+
 app.get("/add_fees",(req,res)=>{
     res.sendFile(path.join(__dirname+'/repass.html'));
 })
-
 
 async function hashPassword(password) {
     const salt = uuidv1()
@@ -86,9 +80,6 @@ async function hashPassword(password) {
     }
     // return await bcrypt.hash(password, uuidv1());
 };
-
-
-
 
 app.post("/reset_password", async (req, res, next) => {
     const pass = req.body.password
@@ -121,16 +112,16 @@ app.post("/reset_password", async (req, res, next) => {
 })
 
 // middlewares
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
 app.use(morgan('dev'));
-
 app.use(cookieParser());
 app.use(expressValidator());
 app.use(cors());
 
-
-
 // routes middleware
-
 app.use('/api', authRoutes);
 app.use('/api', userRoutes);
 app.use('/api', categoryRoutes);
@@ -160,6 +151,7 @@ app.use('/api', finance_info)
 app.use('/api', document);
 app.use('/api', bymember_ship);
 app.use('/api',manage_stripe)
+app.use('/api',candidates)
 
 const port = process.env.PORT || 8000;
 app.listen(port, () => {

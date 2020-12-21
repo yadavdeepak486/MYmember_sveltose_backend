@@ -1,4 +1,5 @@
 const { functions } = require('lodash');
+const Stripe = require("../models/stripe");
 var addmemberModal = require('../models/addmember')
 const cloudenary = require("cloudinary").v2
 
@@ -97,7 +98,6 @@ exports.deletemember = (req, res) => {
 exports.updatemember = (req, res) => {
     var memberID = req.params.memberID;
     console.log(req.body)
-    
     addmemberModal.updateOne({ _id : memberID },req.body).exec((err, data) => {
         if (err) {
             res.send({ error: 'member is not update' })
@@ -135,3 +135,28 @@ exports.updatemember = (req, res) => {
     }
     })
 }
+
+exports.addStripe = (req,res) => {
+    var stripeId = req.params.stripeId;
+    var studentId = req.params.studentId;   
+  
+    Stripe.findById(stripeId).exec((err,data)=>{
+        if(err){
+            res.send({error:'stripe data not found'})
+        }
+        else{
+           var stripeData = data;
+           console.log(stripeData)
+           addmemberModal.findByIdAndUpdate({_id:studentId},{$push:{stripe : stripeData._id }}).exec((err,data)=>{
+               if(err){
+                   res.send({error:'stripe is not add in student'})
+               }
+               else{
+                res.send({error:'stripe is add in student'})
+              }
+           })
+       }
+    })
+}
+    
+    

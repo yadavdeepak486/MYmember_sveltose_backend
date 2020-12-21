@@ -98,6 +98,12 @@ const addmemberSchema = new schema(
                 type:schema.Types.ObjectId,
                 ref:'FinanceInfo'
             }
+        ],
+        stripe:[
+            {
+                type:schema.Types.ObjectId,
+                ref:'Stripe'
+            }
         ]
     }
 );
